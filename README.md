@@ -10,6 +10,13 @@ If you are looking for a pure Json-to-Json transformation tool in Java (or compa
 
 Anyway, so far it's a wannabe. :sweat_smile:
 
+# Try it
+
+* Checkout out the sources
+* Open the project in Netbeans (yeah, that's the easiest for now)
+* In the `Projects` view, right-click on project and `Custom` --> `Do the damn thing`
+* Something (useless, so far) will happen in the console
+
 # License
 
 Under [MIT License](http://opensource.org/licenses/MIT).
