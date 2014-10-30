@@ -1,0 +1,27 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"properties": {
+		"someSourceString": {
+			"type": "string"
+		},
+		"someSourceInteger": {
+			"type": "integer"
+		},
+		"simpleSourceObject": {
+			"type": "object",
+			"properties": {
+				"stringSourceProperty": {
+					"type": "string"
+				},
+				"integerSourceProperty": {
+					"type": "integer"
+				}
+			},
+			"additionalProperties" : false,
+			"required": ["stringSourceProperty", "integerSourceProperty"]
+		}
+	},
+	"additionalProperties" : false,
+	"required": ["someSourceString", "someSourceInteger", "simpleSourceObject"]
+}

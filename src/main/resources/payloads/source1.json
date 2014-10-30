@@ -1,0 +1,8 @@
+{
+	"someEventString": "someValue",
+	"someEventInteger": 1,
+	"simpleEventObject": {
+		"stringEventProperty": "someEventValue",
+		"integerEventProperty": 1
+	}
+}

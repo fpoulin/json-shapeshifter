@@ -1,0 +1,27 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"properties": {
+		"someTargetString": {
+			"type": "string"
+		},
+		"someTargetInteger": {
+			"type": "integer"
+		},
+		"simpleTargetObject": {
+			"type": "object",
+			"properties": {
+				"stringTargetProperty": {
+					"type": "string"
+				},
+				"integerTargetProperty": {
+					"type": "integer"
+				}
+			},
+			"additionalProperties" : false,
+			"required": ["stringTargetProperty", "integerTargetProperty"]
+		}
+	},
+	"additionalProperties" : false,
+	"required": ["someTargetString", "someTargetInteger", "simpleTargetObject"]
+}

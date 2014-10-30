@@ -1,0 +1,91 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"properties": {
+		"someEventString": {
+			"type": "string"
+		},
+		"someEventInteger": {
+			"type": "integer"
+		},
+		"someEventStringArray": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"someEventIntegerArray": {
+			"type": "array",
+			"items": {
+				"type": "integer"
+			}
+		},
+		"simpleEventObject": {
+			"type": "object",
+			"properties": {
+				"stringEventProperty": {
+					"type": "string"
+				},
+				"integerEventProperty": {
+					"type": "integer"
+				}
+			},
+			"additionalProperties" : false,
+			"required": ["stringEventProperty", "integerEventProperty"]
+		},
+		"arrayOfEventObjects": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"stringEventProperty": {
+						"type": "string"
+					},
+					"integerEventProperty": {
+						"type": "integer"
+					}
+				},
+				"additionalProperties" : false,
+				"required": ["stringEventProperty", "integerEventProperty"]
+			}
+		},
+		"complexEventObject": {
+			"type": "object",
+			"properties": {
+				"objectEventProperty": {
+					"type": "object",
+					"properties": {
+						"stringEventProperty": {
+							"type": "string"
+						},
+						"integerEventProperty": {
+							"type": "integer"
+						}
+					},
+					"additionalProperties" : false,
+					"required": ["stringEventProperty", "integerEventProperty"]
+				},
+				"arrayEventProperty": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"stringEventProperty": {
+								"type": "string"
+							},
+							"integerEventProperty": {
+								"type": "integer"
+							}
+						},
+						"additionalProperties" : false,
+						"required": ["stringEventProperty", "integerEventProperty"]
+					}
+				}
+			},
+			"additionalProperties" : false,
+			"required": ["objectEventProperty", "arrayEventProperty"]
+		}
+	},
+	"additionalProperties" : false,
+	"required": ["someEventString", "someEventInteger", "someEventStringArray", "someEventIntegerArray", "simpleEventObject", "arrayOfEventObjects", "complexEventObject"]
+}
