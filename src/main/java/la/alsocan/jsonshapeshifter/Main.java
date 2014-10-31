@@ -7,6 +7,8 @@ import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import java.io.IOException;
 import java.util.Iterator;
+import la.alsocan.jsonshapeshifter.bindings.StaticIntegerBinding;
+import la.alsocan.jsonshapeshifter.bindings.StaticStringBinding;
 
 /**
  * Test application to play with the transformations.
@@ -36,13 +38,12 @@ public class Main {
 		}
 		
 		// build the transformation incrementally
-		System.out.println("Nodes yet to bind:");
 		Transformation t = new Transformation(source, target);
 		Iterator<SchemaNode> remainings = t.toBindIterator();
-		while(remainings.hasNext()) {
-			SchemaNode next = remainings.next();
-			System.out.println(next.getPath()); // for now, just display all nodes
-		}
+		t.addBinding(remainings.next(), new StaticStringBinding("Some string value"));
+		t.addBinding(remainings.next(), new StaticIntegerBinding(42));
+		t.addBinding(remainings.next(), new StaticStringBinding("Another string value"));
+		t.addBinding(remainings.next(), new StaticIntegerBinding(1337));
 
 		// produce something (for now, random but valid)
 		JsonNode result = t.apply();

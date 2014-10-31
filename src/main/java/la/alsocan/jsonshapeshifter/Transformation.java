@@ -1,5 +1,6 @@
 package la.alsocan.jsonshapeshifter;
 
+import la.alsocan.jsonshapeshifter.bindings.Binding;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -11,6 +12,7 @@ import la.alsocan.jsonshapeshifter.schemas.SchemaObjectNode;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 /**
@@ -18,10 +20,13 @@ import java.util.TreeMap;
  */
 public class Transformation {
 	
+	public static final String DEFAULT_STRING = "?";
+	public static final Integer DEFAULT_INTEGER = 0;
+	
 	private final Schema source;
 	private final Schema target;
 	
-	private final Map<SchemaNode, Binding> bindings;
+	private final Map<SchemaNode, Binding<?>> bindings;
 	
 	public Transformation (Schema source, Schema target) {
 		this.source = source;
@@ -51,6 +56,9 @@ public class Transformation {
 
 			@Override
 			public SchemaNode next() {
+				if (remainingNode == null) {
+					throw new NoSuchElementException();
+				}
 				SchemaNode toReturn = remainingNode;
 				remainingNode = getNextNode();
 				return toReturn;
@@ -68,6 +76,10 @@ public class Transformation {
 				return node;
 			}
 		};
+	}
+	
+	public void addBinding(SchemaNode node, Binding<?> binding) {
+		bindings.put(node, binding);
 	}
 	
 	/**
@@ -111,18 +123,42 @@ public class Transformation {
 				break;
 			case INTEGER:
 				if (parent instanceof ObjectNode) {
-					((ObjectNode)parent).put(tNode.getName(), 42); // hard-coded value
+					((ObjectNode)parent).put(tNode.getName(), resolveIntegerValue(tNode));
 				} else {
-					((ArrayNode)parent).add(42); // hard-coded value
+					((ArrayNode)parent).add(resolveIntegerValue(tNode));
 				}
 				break;
 			case STRING:
 				if (parent instanceof ObjectNode) {
-					((ObjectNode)parent).put(tNode.getName(), "some string value"); // hard-coded value
+					((ObjectNode)parent).put(tNode.getName(), resolveStringValue(tNode));
 				} else {
-					((ArrayNode)parent).add("some string value"); // hard-coded value
+					((ArrayNode)parent).add(resolveStringValue(tNode));
 				}
 				break;
 		}
+	}
+	
+	private Integer resolveIntegerValue (SchemaNode node) {
+		
+		Binding<Integer> b = (Binding<Integer>)bindings.get(node);
+		Integer value;
+		if (b == null) {
+			value = DEFAULT_INTEGER;
+		} else {
+			value = b.getValue();
+		}
+		return value;
+	}
+	
+	private String resolveStringValue (SchemaNode node) {
+		
+		Binding<String> b = (Binding<String>)bindings.get(node);
+		String value;
+		if (b == null) {
+			value = DEFAULT_STRING;
+		} else {
+			value = b.getValue();
+		}
+		return value;
 	}
 }
