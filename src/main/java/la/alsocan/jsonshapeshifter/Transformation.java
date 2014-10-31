@@ -83,25 +83,25 @@ public class Transformation {
 	}
 	
 	/**
-	 * Temporary method to apply a transformation. Does not take any payload for now.
-	 * 
+	 * Temporary method to apply a transformation.
+	 * @param payload the payload to transform
 	 * @return A transformed Json payload following the transformation definition.
 	 */
-	public JsonNode apply() {
+	public JsonNode apply(JsonNode payload) {
 		ObjectMapper om = new ObjectMapper();
 		ObjectNode root = om.createObjectNode();
 		for (SchemaNode tNode : target.getChildren()) {
-			resolve(om, tNode, root);
+			resolve(om, tNode, root, payload);
 		}
 		return root;
 	}
 
-	public void resolve(ObjectMapper om, SchemaNode tNode, JsonNode parent) {
+	public void resolve(ObjectMapper om, SchemaNode tNode, JsonNode parent, JsonNode payload) {
 		switch(tNode.getType()) {
 			case OBJECT:
 				ObjectNode oNode = om.createObjectNode();
 				for (SchemaNode tChildNode : ((SchemaObjectNode)tNode).getChildren()) {
-					resolve(om, tChildNode, oNode);
+					resolve(om, tChildNode, oNode, payload);
 				}
 				if (parent instanceof ObjectNode) {
 					((ObjectNode)parent).set(tNode.getName(), oNode);
@@ -113,7 +113,7 @@ public class Transformation {
 				ArrayNode aNode = om.createArrayNode();
 				SchemaNode tChildNode = ((SchemaArrayNode)tNode).getChild();
 				for (int i=0; i<5; i++) { // just put 5 elements in array
-					resolve(om, tChildNode, aNode);
+					resolve(om, tChildNode, aNode, payload);
 				}
 				if (parent instanceof ObjectNode) {
 					((ObjectNode)parent).set(tNode.getName(), aNode);
@@ -123,41 +123,41 @@ public class Transformation {
 				break;
 			case INTEGER:
 				if (parent instanceof ObjectNode) {
-					((ObjectNode)parent).put(tNode.getName(), resolveIntegerValue(tNode));
+					((ObjectNode)parent).put(tNode.getName(), resolveIntegerValue(tNode, payload));
 				} else {
-					((ArrayNode)parent).add(resolveIntegerValue(tNode));
+					((ArrayNode)parent).add(resolveIntegerValue(tNode, payload));
 				}
 				break;
 			case STRING:
 				if (parent instanceof ObjectNode) {
-					((ObjectNode)parent).put(tNode.getName(), resolveStringValue(tNode));
+					((ObjectNode)parent).put(tNode.getName(), resolveStringValue(tNode, payload));
 				} else {
-					((ArrayNode)parent).add(resolveStringValue(tNode));
+					((ArrayNode)parent).add(resolveStringValue(tNode, payload));
 				}
 				break;
 		}
 	}
 	
-	private Integer resolveIntegerValue (SchemaNode node) {
+	private Integer resolveIntegerValue (SchemaNode node, JsonNode payload) {
 		
 		Binding<Integer> b = (Binding<Integer>)bindings.get(node);
 		Integer value;
 		if (b == null) {
 			value = DEFAULT_INTEGER;
 		} else {
-			value = b.getValue();
+			value = b.getValue(payload);
 		}
 		return value;
 	}
 	
-	private String resolveStringValue (SchemaNode node) {
+	private String resolveStringValue (SchemaNode node, JsonNode payload) {
 		
 		Binding<String> b = (Binding<String>)bindings.get(node);
 		String value;
 		if (b == null) {
 			value = DEFAULT_STRING;
 		} else {
-			value = b.getValue();
+			value = b.getValue(payload);
 		}
 		return value;
 	}

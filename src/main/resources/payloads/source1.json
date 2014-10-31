@@ -1,8 +1,8 @@
 {
-	"someEventString": "someValue",
-	"someEventInteger": 1,
-	"simpleEventObject": {
-		"stringEventProperty": "someEventValue",
-		"integerEventProperty": 1
+	"someSourceString": "some source string value",
+	"someSourceInteger": 26,
+	"simpleSourceObject": {
+		"stringSourceProperty": "another string value, in an object",
+		"integerSourceProperty": 3522
 	}
 }

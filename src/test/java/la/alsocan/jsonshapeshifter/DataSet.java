@@ -34,4 +34,14 @@ public class DataSet {
 		"	\"additionalProperties\" : false,\n" +
 		"	\"required\": [\"someString\", \"someInteger\", \"simpleObject\"]\n" +
 		"}";
+	
+	public final static String SIMPLE_PAYLOAD = 
+		"{\n" +
+		"	\"someString\": \"string1\",\n" +
+		"	\"someInteger\": 1,\n" +
+		"	\"simpleObject\": {\n" +
+		"		\"stringProperty\": \"string2\",\n" +
+		"		\"integerProperty\": 2\n" +
+		"	}\n" +
+		"}";
 }

@@ -10,12 +10,13 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.TreeMap;
 
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
  */
 public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
-
+	
 	public Schema(String name, String path, boolean required) {
 		super(name, path, required);
 	}
@@ -31,7 +32,19 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 	public final static Schema buildSchema(JsonNode schemaNode) {
 		Schema schema = new Schema("", "", true);
 		schema.withResolvedChildren(schemaNode);
+		schema.buildIndex();
 		return schema;
+	}
+	
+	// FIXME: replace this with
+	private final TreeMap<String, SchemaNode> nodeIndex = new TreeMap<>();
+	private void buildIndex(){
+		for (SchemaNode node : this) {
+			nodeIndex.put(node.getPath(), node);
+		}
+	}
+	public SchemaNode at(String path) {
+		return nodeIndex.get(path);
 	}
 
 	//<editor-fold defaultstate="collapsed" desc="Visitor">
