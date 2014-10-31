@@ -57,12 +57,14 @@ public class Transformation {
 			}
 
 			private SchemaNode getNextNode() {
-				SchemaNode node;
-				do {
-					node = itNodes.next();
-				} while (itNodes.hasNext() && 
-						  (bindings.containsKey(node) 
-						  || ENodeType.OBJECT.equals(node.getType())));
+				SchemaNode node = null;
+				if (itNodes.hasNext()) {
+					do {
+						node = itNodes.next();
+					} while (itNodes.hasNext() && 
+							  (bindings.containsKey(node) 
+							  || ENodeType.OBJECT.equals(node.getType())));
+				}
 				return node;
 			}
 		};

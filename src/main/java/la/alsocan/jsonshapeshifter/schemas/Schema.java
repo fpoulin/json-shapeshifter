@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -63,6 +64,9 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 		
 		@Override
 		public SchemaNode next() {
+			if (nextNode == null) {
+				throw new NoSuchElementException();
+			}
 			SchemaNode toReturn = nextNode;
 			nextNode = calculateNext();
 			return toReturn;
@@ -77,10 +81,10 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 			if (buffer.isEmpty()) {
 				return null;
 			}
-			Queue<SchemaNode> queue = buffer.pop();
+			Queue<SchemaNode> queue = buffer.peek();
 			SchemaNode node = queue.poll();
-			if (!queue.isEmpty()) {
-				buffer.push(queue);
+			if (queue.isEmpty()) {
+				buffer.pop();
 			}
 			return node;
 		}
