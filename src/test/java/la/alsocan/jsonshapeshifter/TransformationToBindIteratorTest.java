@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import la.alsocan.jsonshapeshifter.bindings.StaticStringBinding;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -49,17 +50,28 @@ public class TransformationToBindIteratorTest {
 	}
 	
 	@Test
-	public void iteratedValuesShouldMatchWithInTheRightOrder() throws IOException {
+	public void iteratorShouldIgnoreObjectNodes() throws IOException {
 	
-		String[] expected = new String [] {
-			"/someString", 
-			"/someInteger", 
-			"/simpleObject/stringProperty", 
-			"/simpleObject/integerProperty"};
-		
 		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Iterator<SchemaNode> it = new Transformation(s, s).toBindIterator();
 		for (int i=0; i<4; i++) {
+			assertThat(it.next().getPath(), is(not(equalTo("/simpleObject"))));
+		}
+	}
+	
+	@Test
+	public void iteratorShouldIgnoreNodesWithBindingAndMatchNodesInTheRightOrder() throws IOException {
+	
+		String[] expected = new String [] {
+			"/someInteger", 
+			"/simpleObject/integerProperty"};
+		
+		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
+		Transformation t = new Transformation(s, s);
+		t.addBinding(s.at("/someString"), new StaticStringBinding("someBinding"));
+		t.addBinding(s.at("/simpleObject/stringProperty"), new StaticStringBinding("someBinding"));
+		Iterator<SchemaNode> it = t.toBindIterator();
+		for (int i=0; i<2; i++) {
 			assertThat(it.next().getPath(), is(equalTo(expected[i])));
 		}
 	}

@@ -1,0 +1,8 @@
+{
+	"someSourceString": "some source string value",
+	"someSourceInteger": 26,
+	"simpleSourceObject": {
+		"stringSourceProperty": "another string value, in an object",
+		"integerSourceProperty": 3522
+	}
+}
