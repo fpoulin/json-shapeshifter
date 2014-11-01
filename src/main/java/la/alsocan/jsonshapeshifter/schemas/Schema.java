@@ -36,7 +36,7 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 		return schema;
 	}
 	
-	// FIXME: replace this with
+	// FIXME: replace this with something more elegant
 	private final TreeMap<String, SchemaNode> nodeIndex = new TreeMap<>();
 	private void buildIndex(){
 		for (SchemaNode node : this) {
@@ -70,7 +70,7 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 		
 		public SchemaNodesIterator(Schema schema) {
 			buffer = new Stack<>();
-			Queue rootNodes = new LinkedList(schema.getChildren());
+			Queue<SchemaNode> rootNodes = new LinkedList<>(schema.getChildren());
 			buffer.push(rootNodes);
 			nextNode = readFromBuffer();
 		}
@@ -107,10 +107,10 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 				return null;
 			}
 			if (ENodeType.OBJECT.equals(nextNode.type)) {
-				Queue childrenNodes = new LinkedList(((SchemaObjectNode)nextNode).getChildren());
+				Queue<SchemaNode> childrenNodes = new LinkedList<>(((SchemaObjectNode)nextNode).getChildren());
 				buffer.push(childrenNodes);
 			} else if (ENodeType.ARRAY.equals(nextNode.type)) {
-				Queue childNode = new LinkedList();
+				Queue<SchemaNode> childNode = new LinkedList<>();
 				childNode.add(((SchemaArrayNode)nextNode).getChild());
 				buffer.push(childNode);
 			}

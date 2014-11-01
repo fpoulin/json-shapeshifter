@@ -1,7 +1,5 @@
 package la.alsocan.jsonshapeshifter.bindings;
 
-import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
-
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
  */

@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
  */
-public class TransformationTest {
+public class SimpleTransformationTest {
 	
 	public static final String DEFAULT_STRING = "?";
 	public static final Integer DEFAULT_INTEGER = 0;
@@ -26,9 +26,8 @@ public class TransformationTest {
 	@Test
 	public void transformationShouldSetRightStaticValues() throws IOException {
 	
-		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
-		Transformation t = new Transformation(source, target);
+		Transformation t = new Transformation(target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		t.addBinding(it.next(), new StaticStringBinding("firstString"));
@@ -47,9 +46,8 @@ public class TransformationTest {
 	@Test
 	public void partialTransformationShouldAssignDefaultValues() throws IOException {
 	
-		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
-		Transformation t = new Transformation(source, target);
+		Transformation t = new Transformation(target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		t.addBinding(it.next(), new StaticStringBinding("firstString"));
@@ -66,7 +64,7 @@ public class TransformationTest {
 	
 		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
-		Transformation t = new Transformation(source, target);
+		Transformation t = new Transformation(target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		t.addBinding(it.next(), new StringNodeBinding(source.at("/simpleObject/stringProperty")));

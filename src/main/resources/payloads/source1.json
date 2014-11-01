@@ -1,8 +1,6 @@
 {
-	"someSourceString": "some source string value",
-	"someSourceInteger": 26,
-	"simpleSourceObject": {
-		"stringSourceProperty": "another string value, in an object",
-		"integerSourceProperty": 3522
-	}
+	"someSourceString": "some string",
+	"someSourceInteger": 124,
+	"someSourceStringArray": ["a", "b", "c", "d", "e"],
+	"someSourceIntegerArray": [1, 2, 3, 4, 5, 6, 7, 8]
 }

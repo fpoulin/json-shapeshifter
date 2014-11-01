@@ -5,15 +5,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.ArrayList;
 import la.alsocan.jsonshapeshifter.schemas.ENodeType;
 import la.alsocan.jsonshapeshifter.schemas.SchemaArrayNode;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 import la.alsocan.jsonshapeshifter.schemas.SchemaObjectNode;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
+import la.alsocan.jsonshapeshifter.bindings.CollectionBinding;
 
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
@@ -23,13 +26,11 @@ public class Transformation {
 	public static final String DEFAULT_STRING = "?";
 	public static final Integer DEFAULT_INTEGER = 0;
 	
-	private final Schema source;
 	private final Schema target;
 	
 	private final Map<SchemaNode, Binding<?>> bindings;
 	
-	public Transformation (Schema source, Schema target) {
-		this.source = source;
+	public Transformation (Schema target) {
 		this.target = target;
 		bindings = new TreeMap<>();
 	}
@@ -66,13 +67,13 @@ public class Transformation {
 
 			private SchemaNode getNextNode() {
 				SchemaNode node = null;
-				if (itNodes.hasNext()) {
-					do {
-						node = itNodes.next();
-					} while (itNodes.hasNext() && 
-							  (bindings.containsKey(node) 
-							  || ENodeType.OBJECT.equals(node.getType())));
-				}
+				do {
+					if (!itNodes.hasNext()) {
+						return null;
+					}
+					node = itNodes.next();
+				} while (bindings.containsKey(node) 
+						  || ENodeType.OBJECT.equals(node.getType()));
 				return node;
 			}
 		};
@@ -90,74 +91,80 @@ public class Transformation {
 	public JsonNode apply(JsonNode payload) {
 		ObjectMapper om = new ObjectMapper();
 		ObjectNode root = om.createObjectNode();
+		List<Integer> pointerContext = new ArrayList<>();
 		for (SchemaNode tNode : target.getChildren()) {
-			resolve(om, tNode, root, payload);
+			resolve(om, tNode, root, payload, pointerContext);
 		}
 		return root;
 	}
 
-	public void resolve(ObjectMapper om, SchemaNode tNode, JsonNode parent, JsonNode payload) {
-		switch(tNode.getType()) {
+	public void resolve(ObjectMapper om, SchemaNode targetSchemaNode, JsonNode parentNode, JsonNode payload, List<Integer> pointerContext) {
+		switch(targetSchemaNode.getType()) {
 			case OBJECT:
 				ObjectNode oNode = om.createObjectNode();
-				for (SchemaNode tChildNode : ((SchemaObjectNode)tNode).getChildren()) {
-					resolve(om, tChildNode, oNode, payload);
+				for (SchemaNode tChildNode : ((SchemaObjectNode)targetSchemaNode).getChildren()) {
+					resolve(om, tChildNode, oNode, payload, pointerContext);
 				}
-				if (parent instanceof ObjectNode) {
-					((ObjectNode)parent).set(tNode.getName(), oNode);
+				if (parentNode instanceof ObjectNode) {
+					((ObjectNode)parentNode).set(targetSchemaNode.getName(), oNode);
 				} else {
-					((ArrayNode)parent).add(oNode);
+					((ArrayNode)parentNode).add(oNode);
 				}
 				break;
 			case ARRAY:
 				ArrayNode aNode = om.createArrayNode();
-				SchemaNode tChildNode = ((SchemaArrayNode)tNode).getChild();
-				for (int i=0; i<5; i++) { // just put 5 elements in array
-					resolve(om, tChildNode, aNode, payload);
+				SchemaNode tChildNode = ((SchemaArrayNode)targetSchemaNode).getChild();
+				CollectionBinding binding = (CollectionBinding)bindings.get(targetSchemaNode);
+				int index = 0;
+				pointerContext.add(index);
+				for (JsonNode node : payload.at(binding.getValue(payload, pointerContext).getPath())) {
+					resolve(om, tChildNode, aNode, payload, pointerContext);
+					pointerContext.set(pointerContext.size()-1, ++index);
 				}
-				if (parent instanceof ObjectNode) {
-					((ObjectNode)parent).set(tNode.getName(), aNode);
+				pointerContext.remove(pointerContext.size()-1);
+				if (parentNode instanceof ObjectNode) {
+					((ObjectNode)parentNode).set(targetSchemaNode.getName(), aNode);
 				} else {
-					((ArrayNode)parent).add(aNode);
+					((ArrayNode)parentNode).add(aNode);
 				}
 				break;
 			case INTEGER:
-				if (parent instanceof ObjectNode) {
-					((ObjectNode)parent).put(tNode.getName(), resolveIntegerValue(tNode, payload));
+				if (parentNode instanceof ObjectNode) {
+					((ObjectNode)parentNode).put(targetSchemaNode.getName(), resolveIntegerValue(targetSchemaNode, payload, pointerContext));
 				} else {
-					((ArrayNode)parent).add(resolveIntegerValue(tNode, payload));
+					((ArrayNode)parentNode).add(resolveIntegerValue(targetSchemaNode, payload, pointerContext));
 				}
 				break;
 			case STRING:
-				if (parent instanceof ObjectNode) {
-					((ObjectNode)parent).put(tNode.getName(), resolveStringValue(tNode, payload));
+				if (parentNode instanceof ObjectNode) {
+					((ObjectNode)parentNode).put(targetSchemaNode.getName(), resolveStringValue(targetSchemaNode, payload, pointerContext));
 				} else {
-					((ArrayNode)parent).add(resolveStringValue(tNode, payload));
+					((ArrayNode)parentNode).add(resolveStringValue(targetSchemaNode, payload, pointerContext));
 				}
 				break;
 		}
 	}
 	
-	private Integer resolveIntegerValue (SchemaNode node, JsonNode payload) {
+	private Integer resolveIntegerValue (SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
 		
 		Binding<Integer> b = (Binding<Integer>)bindings.get(node);
 		Integer value;
 		if (b == null) {
 			value = DEFAULT_INTEGER;
 		} else {
-			value = b.getValue(payload);
+			value = b.getValue(payload, pointerContext);
 		}
 		return value;
 	}
 	
-	private String resolveStringValue (SchemaNode node, JsonNode payload) {
+	private String resolveStringValue (SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
 		
 		Binding<String> b = (Binding<String>)bindings.get(node);
 		String value;
 		if (b == null) {
 			value = DEFAULT_STRING;
 		} else {
-			value = b.getValue(payload);
+			value = b.getValue(payload, pointerContext);
 		}
 		return value;
 	}

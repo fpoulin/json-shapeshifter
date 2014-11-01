@@ -8,20 +8,19 @@
 		"someSourceInteger": {
 			"type": "integer"
 		},
-		"simpleSourceObject": {
-			"type": "object",
-			"properties": {
-				"stringSourceProperty": {
-					"type": "string"
-				},
-				"integerSourceProperty": {
-					"type": "integer"
-				}
-			},
-			"additionalProperties" : false,
-			"required": ["stringSourceProperty", "integerSourceProperty"]
+		"someSourceStringArray": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"someSourceIntegerArray": {
+			"type": "array",
+			"items": {
+				"type": "integer"
+			}
 		}
 	},
 	"additionalProperties" : false,
-	"required": ["someSourceString", "someSourceInteger", "simpleSourceObject"]
+	"required": ["someSourceString", "someSourceInteger", "someSourceStringArray", "someSourceIntegerArray"]
 }

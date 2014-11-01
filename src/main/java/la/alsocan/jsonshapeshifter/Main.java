@@ -8,10 +8,10 @@ import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import java.io.IOException;
 import java.util.Iterator;
+import la.alsocan.jsonshapeshifter.bindings.CollectionBinding;
 import la.alsocan.jsonshapeshifter.bindings.IntegerNodeBinding;
-import la.alsocan.jsonshapeshifter.bindings.StaticIntegerBinding;
-import la.alsocan.jsonshapeshifter.bindings.StaticStringBinding;
 import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
+import la.alsocan.jsonshapeshifter.schemas.SchemaArrayNode;
 
 /**
  * Test application to play with the transformations.
@@ -42,19 +42,19 @@ public class Main {
 		}
 		
 		// build the transformation incrementally
-		Transformation t = new Transformation(source, target);
+		Transformation t = new Transformation(target);
 		Iterator<SchemaNode> remainings = t.toBindIterator();
-		t.addBinding(remainings.next(), new StaticStringBinding("Some string value"));
-		t.addBinding(remainings.next(), new StaticIntegerBinding(42));
-		t.addBinding(remainings.next(), new StringNodeBinding(source.at("/someSourceString")));
-		t.addBinding(remainings.next(), new IntegerNodeBinding(source.at("/someSourceInteger")));
+		t.addBinding(remainings.next(), new CollectionBinding((SchemaArrayNode)source.at("/someSourceStringArray")));
+		t.addBinding(remainings.next(), new StringNodeBinding(source.at("/someSourceStringArray/{i}")));
+		t.addBinding(remainings.next(), new CollectionBinding((SchemaArrayNode)source.at("/someSourceIntegerArray")));
+		t.addBinding(remainings.next(), new IntegerNodeBinding(source.at("/someSourceIntegerArray/{i}")));
 
 		// produce something
+		System.out.println("\nResulting payload:");
 		JsonNode payload = new ObjectMapper().readTree(new File(SOURCE_PAYLOAD));
 		JsonNode result = t.apply(payload);
 		ObjectMapper om = new ObjectMapper();
 		try {
-			System.out.println("\nResulting payload:");
 			System.out.println(om.writerWithDefaultPrettyPrinter().writeValueAsString(result));
 		} catch (JsonProcessingException ex) {
 			System.err.println("Oups: " + ex);
