@@ -45,7 +45,8 @@ public class Main {
 		Transformation t = new Transformation(target);
 		Iterator<SchemaNode> remainings = t.toBindIterator();
 		t.addBinding(remainings.next(), new CollectionBinding((SchemaArrayNode)source.at("/someSourceStringArray")));
-		t.addBinding(remainings.next(), new StringNodeBinding(source.at("/someSourceStringArray/{i}")));
+		t.addBinding(remainings.next(), new CollectionBinding((SchemaArrayNode)source.at("/someSourceStringArray/{i}")));
+		t.addBinding(remainings.next(), new StringNodeBinding(source.at("/someSourceStringArray/{i}/{i}")));
 		t.addBinding(remainings.next(), new CollectionBinding((SchemaArrayNode)source.at("/someSourceIntegerArray")));
 		t.addBinding(remainings.next(), new IntegerNodeBinding(source.at("/someSourceIntegerArray/{i}")));
 

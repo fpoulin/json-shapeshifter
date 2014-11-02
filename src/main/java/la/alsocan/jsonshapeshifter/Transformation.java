@@ -117,7 +117,7 @@ public class Transformation {
 				CollectionBinding binding = (CollectionBinding)bindings.get(targetSchemaNode);
 				int index = 0;
 				pointerContext.add(index);
-				for (JsonNode node : payload.at(binding.getValue(payload, pointerContext).getPath())) {
+				for (JsonNode node : binding.getValue(payload, pointerContext)) {
 					resolve(om, tChildNode, aNode, payload, pointerContext);
 					pointerContext.set(pointerContext.size()-1, ++index);
 				}

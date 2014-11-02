@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import la.alsocan.jsonshapeshifter.bindings.CollectionBinding;
 import la.alsocan.jsonshapeshifter.bindings.IntegerNodeBinding;
+import la.alsocan.jsonshapeshifter.bindings.StaticIntegerBinding;
 import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import la.alsocan.jsonshapeshifter.schemas.SchemaArrayNode;
@@ -29,7 +30,6 @@ public class SimpleCollectionTransformationTest {
 		Transformation t = new Transformation(target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
-		it.next();
 		it.next();
 		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someStringArray")));
 		it.next();
@@ -54,7 +54,6 @@ public class SimpleCollectionTransformationTest {
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		it.next();
-		it.next();
 		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someStringArray")));
 		t.addBinding(it.next(), new StringNodeBinding(source.at("/someStringArray/{i}")));
 		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someIntegerArray")));
@@ -73,6 +72,32 @@ public class SimpleCollectionTransformationTest {
 		Integer[] expectedIntegers = new Integer [] {1, 2, 3, 4, 5, 6, 7, 8};
 		for (JsonNode node : (ArrayNode)result.at("/someIntegerArray")) {
 			assertThat(node.asInt(), is(equalTo(expectedIntegers[index++])));
+		}
+	}
+	
+	@Test
+	public void collectionBindingShouldWorkWithBindingOnNonCollectionNodes() throws IOException {
+	
+		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
+		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
+		Transformation t = new Transformation(target);
+		
+		Iterator<SchemaNode> it = t.toBindIterator();
+		it.next();
+		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someStringArray")));
+		t.addBinding(it.next(), new StringNodeBinding(source.at("/someString")));
+		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someIntegerArray")));
+		t.addBinding(it.next(), new StaticIntegerBinding(12));
+		
+		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
+		JsonNode result = t.apply(payload);
+		
+		for (JsonNode node : (ArrayNode)result.at("/someStringArray")) {
+			assertThat(node.asText(), is(equalTo("string1")));
+		}
+
+		for (JsonNode node : (ArrayNode)result.at("/someIntegerArray")) {
+			assertThat(node.asInt(), is(equalTo(12)));
 		}
 	}
 }

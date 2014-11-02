@@ -53,9 +53,6 @@ public class DataSet {
 		"		\"someString\": {\n" +
 		"			\"type\": \"string\"\n" +
 		"		},\n" +
-		"		\"someInteger\": {\n" +
-		"			\"type\": \"integer\"\n" +
-		"		},\n" +
 		"		\"someStringArray\": {\n" +
 		"			\"type\": \"array\",\n" +
 		"			\"items\": {\n" +
@@ -70,14 +67,37 @@ public class DataSet {
 		"		}\n" +
 		"	},\n" +
 		"	\"additionalProperties\" : false,\n" +
-		"	\"required\": [\"someString\", \"someInteger\", \"someStringArray\", \"someIntegerArray\"]\n" +
+		"	\"required\": [\"someString\", \"someStringArray\", \"someIntegerArray\"]\n" +
 		"}";
 	
 	public final static String SIMPLE_COLLECTION_PAYLOAD = 
 		"{\n" +
 		"	\"someString\": \"string1\",\n" +
-		"	\"someInteger\": 1,\n" +
 		"	\"someStringArray\": [\"a\", \"b\", \"c\", \"d\", \"e\"],\n" +
 		"	\"someIntegerArray\": [1, 2, 3, 4, 5, 6, 7, 8]\n" +
+		"}";
+	
+	public final static String EMBEDDED_COLLECTION_SCHEMA = 
+		"{\n" +
+		"	\"$schema\": \"http://json-schema.org/draft-04/schema#\",\n" +
+		"	\"type\": \"object\",\n" +
+		"	\"properties\": {\n" +
+		"		\"someArrayOfArray\": {\n" +
+		"			\"type\": \"array\",\n" +
+		"			\"items\": {\n" +
+		"				\"type\": \"array\",\n" +
+		"				\"items\": {\n" +
+		"					\"type\": \"string\"\n" +
+		"				}\n" +
+		"			}\n" +
+		"		}\n" +
+		"	},\n" +
+		"	\"additionalProperties\" : false,\n" +
+		"	\"required\": [\"someArrayOfArray\"]\n" +
+		"}";
+
+	public final static String EMBEDDED_COLLECTION_PAYLOAD = 
+		"{\n" +
+		"	\"someArrayOfArray\": [[\"a\", \"b\", \"c\"], [\"d\", \"e\"], [\"f\"]]\n" +
 		"}";
 }
