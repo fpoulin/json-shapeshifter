@@ -10,7 +10,7 @@ import la.alsocan.jsonshapeshifter.utils.JsonPointerUtils;
  * @author Florian Poulin <https://github.com/fpoulin>
  */
 public class CollectionBinding extends Binding<ArrayNode> {
-
+	
 	private final SchemaArrayNode source;
 
 	public CollectionBinding(SchemaArrayNode source) {

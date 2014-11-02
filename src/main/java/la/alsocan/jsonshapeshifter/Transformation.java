@@ -4,6 +4,7 @@ import la.alsocan.jsonshapeshifter.bindings.Binding;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.ArrayList;
 import la.alsocan.jsonshapeshifter.schemas.ENodeType;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
-import la.alsocan.jsonshapeshifter.bindings.CollectionBinding;
 
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
@@ -114,10 +114,9 @@ public class Transformation {
 			case ARRAY:
 				ArrayNode aNode = om.createArrayNode();
 				SchemaNode tChildNode = ((SchemaArrayNode)targetSchemaNode).getChild();
-				CollectionBinding binding = (CollectionBinding)bindings.get(targetSchemaNode);
 				int index = 0;
 				pointerContext.add(index);
-				for (JsonNode node : binding.getValue(payload, pointerContext)) {
+				for (JsonNode node : resolveCollection(targetSchemaNode, payload, pointerContext)) {
 					resolve(om, tChildNode, aNode, payload, pointerContext);
 					pointerContext.set(pointerContext.size()-1, ++index);
 				}
@@ -163,6 +162,18 @@ public class Transformation {
 		String value;
 		if (b == null) {
 			value = DEFAULT_STRING;
+		} else {
+			value = b.getValue(payload, pointerContext);
+		}
+		return value;
+	}
+	
+	private ArrayNode resolveCollection (SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
+		
+		Binding<ArrayNode> b = (Binding<ArrayNode>)bindings.get(node);
+		ArrayNode value;
+		if (b == null) {
+			value = new ArrayNode(JsonNodeFactory.instance);
 		} else {
 			value = b.getValue(payload, pointerContext);
 		}

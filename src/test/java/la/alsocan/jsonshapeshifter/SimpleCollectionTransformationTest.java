@@ -13,14 +13,20 @@ import la.alsocan.jsonshapeshifter.schemas.Schema;
 import la.alsocan.jsonshapeshifter.schemas.SchemaArrayNode;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
  */
 public class SimpleCollectionTransformationTest {
+	
+	public static final String DEFAULT_STRING = "?";
 	
 	@Test
 	public void collectionBindingShouldProduceTheRightNumberOfElements() throws IOException {
@@ -99,5 +105,39 @@ public class SimpleCollectionTransformationTest {
 		for (JsonNode node : (ArrayNode)result.at("/someIntegerArray")) {
 			assertThat(node.asInt(), is(equalTo(12)));
 		}
+	}
+	
+	@Test
+	public void partialCollectionTransformationShouldAssignDefaultValues() throws IOException {
+	
+		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
+		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
+		Transformation t = new Transformation(target);
+		
+		Iterator<SchemaNode> it = t.toBindIterator();
+		it.next();
+		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someStringArray")));
+		// not binding /someIntegerArray at all (should produce empty array)
+		
+		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
+		
+		JsonNode result;
+		try {
+			result = t.apply(payload);
+		} catch (Exception e) {
+			fail("Got the following exception: " + e);
+			return;
+		}
+		
+		for (int i=0; i<5; i++) {
+			JsonNode node = result.at("/someStringArray/" + i);
+			assertThat(node, is(not(nullValue())));
+			assertThat(node.asText(), is(equalTo(DEFAULT_STRING)));
+		}
+
+		JsonNode node = result.at("/someIntegerArray");
+		assertThat(node, is(not(nullValue())));
+		assertThat(node, is(instanceOf(ArrayNode.class)));
+		assertThat(((ArrayNode)node).size(), is(equalTo(0)));
 	}
 }
