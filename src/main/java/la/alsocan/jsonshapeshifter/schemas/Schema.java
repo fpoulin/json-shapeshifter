@@ -50,9 +50,9 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 	//<editor-fold defaultstate="collapsed" desc="Visitor">
 	@Override
 	public final void accept(ITypedNodeVisitor visitor) {
-		for (SchemaNode node : getChildren()) {
+		getChildren().stream().forEach((node) -> {
 			node.accept(visitor);
-		}
+		});
 		visitor.endVisit();
 	}
 	//</editor-fold>

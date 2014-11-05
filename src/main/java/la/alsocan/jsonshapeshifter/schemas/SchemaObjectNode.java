@@ -63,9 +63,9 @@ public class SchemaObjectNode extends SchemaNode {
 	@Override
 	protected void accept(ITypedNodeVisitor visitor) {
 		visitor.visitObject(this);
-		for (SchemaNode child : children) {
+		children.stream().forEach((child) -> {
 			child.accept(visitor);
-		}
+		});
 		visitor.endVisitObject(this);
 	}
 	//</editor-fold>

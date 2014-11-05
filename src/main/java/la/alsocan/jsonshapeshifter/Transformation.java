@@ -89,9 +89,9 @@ public class Transformation {
 		ObjectMapper om = new ObjectMapper();
 		ObjectNode root = om.createObjectNode();
 		List<Integer> pointerContext = new ArrayList<>();
-		for (SchemaNode tNode : target.getChildren()) {
+		target.getChildren().stream().forEach((tNode) -> {
 			resolve(om, tNode, root, payload, pointerContext);
-		}
+		});
 		return root;
 	}
 
@@ -100,9 +100,9 @@ public class Transformation {
 		switch(node.getType()) {
 		case OBJECT:
 			ObjectNode oNode = om.createObjectNode();
-			for (SchemaNode tChildNode : ((SchemaObjectNode)node).getChildren()) {
+			((SchemaObjectNode)node).getChildren().stream().forEach((tChildNode) -> {
 				resolve(om, tChildNode, oNode, payload, pointerContext);
-			}
+			});
 			if (parentNode instanceof ObjectNode) {
 				((ObjectNode)parentNode).set(node.getName(), oNode);
 			} else {
