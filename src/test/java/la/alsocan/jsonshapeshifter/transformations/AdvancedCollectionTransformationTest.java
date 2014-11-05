@@ -1,10 +1,12 @@
-package la.alsocan.jsonshapeshifter;
+package la.alsocan.jsonshapeshifter.transformations;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.io.IOException;
 import java.util.Iterator;
+import la.alsocan.jsonshapeshifter.DataSet;
+import la.alsocan.jsonshapeshifter.Transformation;
 import la.alsocan.jsonshapeshifter.bindings.CollectionBinding;
 import la.alsocan.jsonshapeshifter.bindings.StaticStringBinding;
 import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;

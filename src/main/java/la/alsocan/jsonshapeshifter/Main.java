@@ -7,9 +7,14 @@ import java.io.File;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import la.alsocan.jsonshapeshifter.bindings.Binding;
 import la.alsocan.jsonshapeshifter.bindings.CollectionBinding;
+import la.alsocan.jsonshapeshifter.bindings.HandlebarsBinding;
 import la.alsocan.jsonshapeshifter.bindings.IntegerNodeBinding;
+import la.alsocan.jsonshapeshifter.bindings.StaticStringBinding;
 import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
 import la.alsocan.jsonshapeshifter.schemas.SchemaArrayNode;
 
@@ -41,15 +46,22 @@ public class Main {
 			return;
 		}
 		
+		// test template
+		String template = "Handlebars says: {{static}} {{node}} '{{nodeIncollection}}'";
+		Map<String, Binding> params = new HashMap<>();
+		params.put("static", new StaticStringBinding("type"));
+		params.put("node", new StringNodeBinding(source.at("/someSourceString")));
+		params.put("nodeIncollection", new StringNodeBinding(source.at("/someSourceStringArray/{i}/{i}")));
+		
 		// build the transformation incrementally
 		Transformation t = new Transformation(target);
 		Iterator<SchemaNode> remainings = t.toBindIterator();
 		t.addBinding(remainings.next(), new CollectionBinding((SchemaArrayNode)source.at("/someSourceStringArray")));
 		t.addBinding(remainings.next(), new CollectionBinding((SchemaArrayNode)source.at("/someSourceStringArray/{i}")));
-		t.addBinding(remainings.next(), new StringNodeBinding(source.at("/someSourceStringArray/{i}/{i}")));
+		t.addBinding(remainings.next(), new HandlebarsBinding(template, params));
 		t.addBinding(remainings.next(), new CollectionBinding((SchemaArrayNode)source.at("/someSourceIntegerArray")));
 		t.addBinding(remainings.next(), new IntegerNodeBinding(source.at("/someSourceIntegerArray/{i}")));
-
+		
 		// produce something
 		System.out.println("\nResulting payload:");
 		JsonNode payload = new ObjectMapper().readTree(new File(SOURCE_PAYLOAD));

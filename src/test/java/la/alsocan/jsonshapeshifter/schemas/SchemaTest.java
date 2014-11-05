@@ -1,7 +1,8 @@
-package la.alsocan.jsonshapeshifter;
+package la.alsocan.jsonshapeshifter.schemas;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import la.alsocan.jsonshapeshifter.DataSet;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
