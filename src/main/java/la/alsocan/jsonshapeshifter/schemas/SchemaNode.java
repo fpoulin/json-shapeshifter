@@ -32,6 +32,12 @@ public class SchemaNode implements Comparable<SchemaNode> {
 				return new SchemaNode(name, path, ENodeType.STRING, required);
 			case "integer":
 				return new SchemaNode(name, path, ENodeType.INTEGER, required);
+			case "number":
+				return new SchemaNode(name, path, ENodeType.NUMBER, required);
+			case "boolean":
+				return new SchemaNode(name, path, ENodeType.BOOLEAN, required);
+			case "null":
+				return new SchemaNode(name, path, ENodeType.NULL, required);
 			default:
 				throw new UnsupportedJsonSchemaException("Unknown type for element '"+path+"'");
 		}

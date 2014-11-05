@@ -100,4 +100,39 @@ public class DataSet {
 		"{\n" +
 		"	\"someArrayOfArray\": [[\"a\", \"b\", \"c\"], [\"d\", \"e\"], [\"f\"]]\n" +
 		"}";
+	
+	public final static String ALL_TYPES_SCHEMA = 
+		"{\n" +
+		"	\"$schema\": \"http://json-schema.org/draft-04/schema#\",\n" +
+		"	\"type\": \"object\",\n" +
+		"	\"properties\": {\n" +
+		"		\"someArray\": {\n" +
+		"			\"type\": \"array\",\n" +
+		"			\"items\": {\n" +
+		"				\"type\": \"object\",\n" +
+		"				\"properties\": {\n" +
+		"					\"someBoolean\": {\n" +
+		"						\"type\": \"boolean\"\n" +
+		"					},\n" +
+		"					\"someInteger\": {\n" +
+		"						\"type\": \"integer\"\n" +
+		"					},\n" +
+		"					\"someNumber\": {\n" +
+		"						\"type\": \"number\"\n" +
+		"					},\n" +
+		"					\"someNull\": {\n" +
+		"						\"type\": \"null\"\n" +
+		"					},\n" +
+		"					\"someString\": {\n" +
+		"						\"type\": \"string\"\n" +
+		"					}\n" +
+		"				},\n" +
+		"				\"additionalProperties\" : false,\n" +
+		"				\"required\": [\"someBoolean\", \"someInteger\", \"someNumber\", \"someNull\", \"someString\"]\n" +
+		"			}\n" +
+		"		}\n" +
+		"	},\n" +
+		"  \"additionalProperties\" : false,\n" +
+		"	\"required\": [\"someArray\"]\n" +
+		"}";
 }

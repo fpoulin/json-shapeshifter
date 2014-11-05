@@ -5,8 +5,11 @@ package la.alsocan.jsonshapeshifter.schemas;
  */
 public enum ENodeType {
 	
-	OBJECT,
 	ARRAY,
+	BOOLEAN,
 	INTEGER,
+	NUMBER,
+	NULL,
+	OBJECT,
 	STRING
 }
