@@ -14,6 +14,6 @@ public class NumberNodeBinding extends AbstractNodeBinding<Double> {
 
 	@Override
 	protected Double readValue(JsonNode node) {
-		return node.numberValue().doubleValue();
+		return node.doubleValue();
 	}
 }

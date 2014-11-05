@@ -103,7 +103,7 @@ public class Transformation {
 			((SchemaObjectNode)node).getChildren().stream().forEach((tChildNode) -> {
 				resolve(om, tChildNode, oNode, payload, pointerContext);
 			});
-			if (parentNode instanceof ObjectNode) {
+			if (parentNode.isObject()) {
 				((ObjectNode)parentNode).set(node.getName(), oNode);
 			} else {
 				((ArrayNode)parentNode).add(oNode);
@@ -121,42 +121,42 @@ public class Transformation {
 				pointerContext.set(pointerContext.size()-1, ++index);
 			}
 			pointerContext.remove(pointerContext.size()-1);
-			if (parentNode instanceof ObjectNode) {
+			if (parentNode.isObject()) {
 				((ObjectNode)parentNode).set(node.getName(), aNode);
 			} else {
 				((ArrayNode)parentNode).add(aNode);
 			}
 			break;
 		case BOOLEAN:
-			if (parentNode instanceof ObjectNode) {
+			if (parentNode.isObject()) {
 				((ObjectNode)parentNode).put(node.getName(), (Boolean)resolveValue(node, payload, pointerContext));
 			} else {
 				((ArrayNode)parentNode).add((Boolean)resolveValue(node, payload, pointerContext));
 			}
 			break;
 		case INTEGER:
-			if (parentNode instanceof ObjectNode) {
+			if (parentNode.isObject()) {
 				((ObjectNode)parentNode).put(node.getName(), (Integer)resolveValue(node, payload, pointerContext));
 			} else {
 				((ArrayNode)parentNode).add((Integer)resolveValue(node, payload, pointerContext));
 			}
 			break;
 		case NUMBER:
-			if (parentNode instanceof ObjectNode) {
+			if (parentNode.isObject()) {
 				((ObjectNode)parentNode).put(node.getName(), (Double)resolveValue(node, payload, pointerContext));
 			} else {
 				((ArrayNode)parentNode).add((Double)resolveValue(node, payload, pointerContext));
 			}
 			break;
 		case NULL:
-			if (parentNode instanceof ObjectNode) {
+			if (parentNode.isObject()) {
 				((ObjectNode)parentNode).putNull(node.getName());
 			} else {
 				((ArrayNode)parentNode).addNull();
 			}
 			break;
 		case STRING:
-			if (parentNode instanceof ObjectNode) {
+			if (parentNode.isObject()) {
 				((ObjectNode)parentNode).put(node.getName(), (String)resolveValue(node, payload, pointerContext));
 			} else {
 				((ArrayNode)parentNode).add((String)resolveValue(node, payload, pointerContext));
