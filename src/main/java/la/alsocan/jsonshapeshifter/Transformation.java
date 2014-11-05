@@ -22,9 +22,6 @@ import java.util.TreeMap;
  */
 public class Transformation {
 	
-	public static final String DEFAULT_STRING = "?";
-	public static final Integer DEFAULT_INTEGER = 0;
-	
 	private final Schema target;
 	
 	private final Map<SchemaNode, Binding<?>> bindings;
@@ -99,25 +96,25 @@ public class Transformation {
 	}
 
 	// FIXME factorize this huge method
-	public void resolve(ObjectMapper om, SchemaNode targetSchemaNode, JsonNode parentNode, JsonNode payload, List<Integer> pointerContext) {
-		switch(targetSchemaNode.getType()) {
+	public void resolve(ObjectMapper om, SchemaNode node, JsonNode parentNode, JsonNode payload, List<Integer> pointerContext) {
+		switch(node.getType()) {
 		case OBJECT:
 			ObjectNode oNode = om.createObjectNode();
-			for (SchemaNode tChildNode : ((SchemaObjectNode)targetSchemaNode).getChildren()) {
+			for (SchemaNode tChildNode : ((SchemaObjectNode)node).getChildren()) {
 				resolve(om, tChildNode, oNode, payload, pointerContext);
 			}
 			if (parentNode instanceof ObjectNode) {
-				((ObjectNode)parentNode).set(targetSchemaNode.getName(), oNode);
+				((ObjectNode)parentNode).set(node.getName(), oNode);
 			} else {
 				((ArrayNode)parentNode).add(oNode);
 			}
 			break;
 		case ARRAY:
 			ArrayNode aNode = om.createArrayNode();
-			SchemaNode tChildNode = ((SchemaArrayNode)targetSchemaNode).getChild();
+			SchemaNode tChildNode = ((SchemaArrayNode)node).getChild();
 			int index = 0;
 			pointerContext.add(index);
-			Iterator<JsonNode> it = resolveArray(targetSchemaNode, payload, pointerContext);
+			Iterator<JsonNode> it = (Iterator<JsonNode>)resolveValue(node, payload, pointerContext);
 			while (it.hasNext()) {
 				it.next();
 				resolve(om, tChildNode, aNode, payload, pointerContext);
@@ -125,111 +122,67 @@ public class Transformation {
 			}
 			pointerContext.remove(pointerContext.size()-1);
 			if (parentNode instanceof ObjectNode) {
-				((ObjectNode)parentNode).set(targetSchemaNode.getName(), aNode);
+				((ObjectNode)parentNode).set(node.getName(), aNode);
 			} else {
 				((ArrayNode)parentNode).add(aNode);
 			}
 			break;
 		case BOOLEAN:
 			if (parentNode instanceof ObjectNode) {
-				((ObjectNode)parentNode).put(targetSchemaNode.getName(), resolveBooleanValue(targetSchemaNode, payload, pointerContext));
+				((ObjectNode)parentNode).put(node.getName(), (Boolean)resolveValue(node, payload, pointerContext));
 			} else {
-				((ArrayNode)parentNode).add(resolveBooleanValue(targetSchemaNode, payload, pointerContext));
+				((ArrayNode)parentNode).add((Boolean)resolveValue(node, payload, pointerContext));
 			}
 			break;
 		case INTEGER:
 			if (parentNode instanceof ObjectNode) {
-				((ObjectNode)parentNode).put(targetSchemaNode.getName(), resolveIntegerValue(targetSchemaNode, payload, pointerContext));
+				((ObjectNode)parentNode).put(node.getName(), (Integer)resolveValue(node, payload, pointerContext));
 			} else {
-				((ArrayNode)parentNode).add(resolveIntegerValue(targetSchemaNode, payload, pointerContext));
+				((ArrayNode)parentNode).add((Integer)resolveValue(node, payload, pointerContext));
 			}
 			break;
 		case NUMBER:
 			if (parentNode instanceof ObjectNode) {
-				((ObjectNode)parentNode).put(targetSchemaNode.getName(), resolveNumberValue(targetSchemaNode, payload, pointerContext));
+				((ObjectNode)parentNode).put(node.getName(), (Double)resolveValue(node, payload, pointerContext));
 			} else {
-				((ArrayNode)parentNode).add(resolveNumberValue(targetSchemaNode, payload, pointerContext));
+				((ArrayNode)parentNode).add((Double)resolveValue(node, payload, pointerContext));
 			}
 			break;
 		case NULL:
 			if (parentNode instanceof ObjectNode) {
-				((ObjectNode)parentNode).putNull(targetSchemaNode.getName());
+				((ObjectNode)parentNode).putNull(node.getName());
 			} else {
 				((ArrayNode)parentNode).addNull();
 			}
 			break;
 		case STRING:
 			if (parentNode instanceof ObjectNode) {
-				((ObjectNode)parentNode).put(targetSchemaNode.getName(), resolveStringValue(targetSchemaNode, payload, pointerContext));
+				((ObjectNode)parentNode).put(node.getName(), (String)resolveValue(node, payload, pointerContext));
 			} else {
-				((ArrayNode)parentNode).add(resolveStringValue(targetSchemaNode, payload, pointerContext));
+				((ArrayNode)parentNode).add((String)resolveValue(node, payload, pointerContext));
 			}
 			break;
 		}
 	}
 	
-	private Iterator<JsonNode> resolveArray (SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
-		
-		Binding<Iterator<JsonNode>> b = (Binding<Iterator<JsonNode>>)bindings.get(node);
-		Iterator<JsonNode> value;
-		if (b == null) {
-			value = new Iterator<JsonNode>() {
-				@Override
-				public boolean hasNext() { return false; }
-				@Override
-				public JsonNode next() { throw new NoSuchElementException(); }
-			};
-		} else {
-			value = b.getValue(payload, pointerContext);
-		}
-		return value;
-	}
-	
-	private Boolean resolveBooleanValue (SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
-		
-		Binding<Boolean> b = (Binding<Boolean>)bindings.get(node);
-		Boolean value;
-		if (b == null) {
-			value = false;
-		} else {
-			value = b.getValue(payload, pointerContext);
-		}
-		return value;
-	}
-	
-	private Integer resolveIntegerValue (SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
-		
-		Binding<Integer> b = (Binding<Integer>)bindings.get(node);
-		Integer value;
-		if (b == null) {
-			value = DEFAULT_INTEGER;
-		} else {
-			value = b.getValue(payload, pointerContext);
-		}
-		return value;
-	}
-	
-	// FIXME: should be able to work with Number (not force to Double)
-	private Double resolveNumberValue (SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
-		
-		Binding<Number> b = (Binding<Number>)bindings.get(node);
-		Number value;
-		if (b == null) {
-			value = 0.0;
-		} else {
-			value = b.getValue(payload, pointerContext);
-		}
-		return value.doubleValue();
-	}
-	
-	private String resolveStringValue (SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
-		
-		Binding<String> b = (Binding<String>)bindings.get(node);
-		String value;
-		if (b == null) {
-			value = DEFAULT_STRING;
-		} else {
-			value = b.getValue(payload, pointerContext);
+	private Object resolveValue(SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
+		Binding<?> b = (Binding<?>)bindings.get(node);
+		Object value;
+		if (b == null || (value = b.getValue(payload, pointerContext)) == null) {
+			switch(node.getType()) {
+				case ARRAY:
+					return Defaults.DEFAULT_ARRAY;
+				case BOOLEAN:
+					return Defaults.DEFAULT_BOOLEAN;
+				case INTEGER:
+					return Defaults.DEFAULT_INTEGER;
+				case NUMBER:
+					return Defaults.DEFAULT_NUMBER;
+				case STRING:
+					return Defaults.DEFAULT_STRING;
+				default:
+					return null;
+			}
 		}
 		return value;
 	}
