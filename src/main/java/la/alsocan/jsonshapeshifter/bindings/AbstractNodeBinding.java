@@ -19,7 +19,8 @@ public abstract class AbstractNodeBinding<T> extends Binding<T> {
 
 	@Override
 	public final T getValue(JsonNode payload, List<Integer> context) {
-		return readValue(payload.at(JsonPointerUtils.resolvePointer(source.getPath(), context)));
+		JsonNode node = payload.at(JsonPointerUtils.resolvePointer(source.getPath(), context));
+		return node == null ? null : readValue(node);
 	}
 	
 	protected abstract T readValue(JsonNode node);
