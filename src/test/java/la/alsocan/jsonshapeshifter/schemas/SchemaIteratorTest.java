@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import la.alsocan.jsonshapeshifter.DataSet;
-import la.alsocan.jsonshapeshifter.schemas.Schema;
-import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;

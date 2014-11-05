@@ -4,7 +4,6 @@ import la.alsocan.jsonshapeshifter.bindings.Binding;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.ArrayList;
 import la.alsocan.jsonshapeshifter.schemas.ENodeType;
@@ -116,7 +115,9 @@ public class Transformation {
 				SchemaNode tChildNode = ((SchemaArrayNode)targetSchemaNode).getChild();
 				int index = 0;
 				pointerContext.add(index);
-				for (JsonNode node : resolveCollection(targetSchemaNode, payload, pointerContext)) {
+				Iterator<JsonNode> it = resolveCollection(targetSchemaNode, payload, pointerContext);
+				while (it.hasNext()) {
+					it.next();
 					resolve(om, tChildNode, aNode, payload, pointerContext);
 					pointerContext.set(pointerContext.size()-1, ++index);
 				}
@@ -168,12 +169,17 @@ public class Transformation {
 		return value;
 	}
 	
-	private ArrayNode resolveCollection (SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
+	private Iterator<JsonNode> resolveCollection (SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
 		
-		Binding<ArrayNode> b = (Binding<ArrayNode>)bindings.get(node);
-		ArrayNode value;
+		Binding<Iterator<JsonNode>> b = (Binding<Iterator<JsonNode>>)bindings.get(node);
+		Iterator<JsonNode> value;
 		if (b == null) {
-			value = new ArrayNode(JsonNodeFactory.instance);
+			value = new Iterator<JsonNode>() {
+				@Override
+				public boolean hasNext() { return false; }
+				@Override
+				public JsonNode next() { throw new NoSuchElementException(); }
+			};
 		} else {
 			value = b.getValue(payload, pointerContext);
 		}
