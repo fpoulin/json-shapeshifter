@@ -9,9 +9,9 @@ import java.util.Map;
 import la.alsocan.jsonshapeshifter.DataSet;
 import la.alsocan.jsonshapeshifter.Transformation;
 import la.alsocan.jsonshapeshifter.bindings.Binding;
-import la.alsocan.jsonshapeshifter.bindings.CollectionBinding;
-import la.alsocan.jsonshapeshifter.bindings.HandlebarsBinding;
-import la.alsocan.jsonshapeshifter.bindings.StaticStringBinding;
+import la.alsocan.jsonshapeshifter.bindings.ArrayNodeBinding;
+import la.alsocan.jsonshapeshifter.bindings.StringHandlebarsBinding;
+import la.alsocan.jsonshapeshifter.bindings.StringConstantBinding;
 import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import la.alsocan.jsonshapeshifter.schemas.SchemaArrayNode;
@@ -36,10 +36,10 @@ public class HandlebarsBindingTransformationTest {
 		
 		String template = "Hello {{world}}";
 		Map<String, Binding> params = new HashMap<>();
-		params.put("world", new StaticStringBinding("world"));
+		params.put("world", new StringConstantBinding("world"));
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new HandlebarsBinding(template, params));
+		t.addBinding(it.next(), new StringHandlebarsBinding(template, params));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
 		JsonNode result = t.apply(payload);
@@ -62,8 +62,8 @@ public class HandlebarsBindingTransformationTest {
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		it.next();
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someStringArray")));
-		t.addBinding(it.next(), new HandlebarsBinding(template, params));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
+		t.addBinding(it.next(), new StringHandlebarsBinding(template, params));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
 		JsonNode result = t.apply(payload);

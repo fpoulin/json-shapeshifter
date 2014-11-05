@@ -1,0 +1,33 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"properties": {
+		"someArray": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"someBoolean": {
+						"type": "boolean"
+					},
+					"someInteger": {
+						"type": "integer"
+					},
+					"someNumber": {
+						"type": "number"
+					},
+					"someNull": {
+						"type": "null"
+					},
+					"someString": {
+						"type": "string"
+					}
+				},
+				"additionalProperties": false,
+				"required": ["someBoolean", "someInteger", "someNumber", "someNull", "someString"]
+			}
+		}
+	},
+	"additionalProperties": false,
+	"required": ["someArray"]
+}

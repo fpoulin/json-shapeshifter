@@ -7,11 +7,11 @@ import java.util.List;
  * @author Florian Poulin <https://github.com/fpoulin>
  * @param <T> Type of value for the static binding
  */
-public abstract class StaticBinding<T> extends Binding<T> {
+public abstract class AbstractConstantBinding<T> extends Binding<T> {
 
 	private final T value;
 	
-	public StaticBinding(T value) {
+	public AbstractConstantBinding(T value) {
 		this.value = value;
 	}
 
@@ -19,5 +19,4 @@ public abstract class StaticBinding<T> extends Binding<T> {
 	public T getValue(JsonNode payload, List<Integer> context) {
 		return value;
 	}
-	
 }

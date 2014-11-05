@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import la.alsocan.jsonshapeshifter.DataSet;
 import la.alsocan.jsonshapeshifter.Transformation;
-import la.alsocan.jsonshapeshifter.bindings.StaticIntegerBinding;
-import la.alsocan.jsonshapeshifter.bindings.StaticStringBinding;
+import la.alsocan.jsonshapeshifter.bindings.IntegerConstantBinding;
+import la.alsocan.jsonshapeshifter.bindings.StringConstantBinding;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -57,8 +57,18 @@ public class TransformationToBindIteratorTest {
 	
 		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Iterator<SchemaNode> it = new Transformation(s).toBindIterator();
-		for (int i=0; i<4; i++) {
+		while (it.hasNext()) {
 			assertThat(it.next().getPath(), is(not(equalTo("/simpleObject"))));
+		}
+	}
+	
+	@Test
+	public void iteratorShouldIgnoreNullNodes() throws IOException {
+	
+		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.ALL_TYPES_SCHEMA));
+		Iterator<SchemaNode> it = new Transformation(s).toBindIterator();
+		while (it.hasNext()) {
+			assertThat(it.next().getPath(), is(not(equalTo("/someArray/{i}/someNull"))));
 		}
 	}
 	
@@ -71,8 +81,8 @@ public class TransformationToBindIteratorTest {
 		
 		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Transformation t = new Transformation(s);
-		t.addBinding(s.at("/someString"), new StaticStringBinding("someBinding"));
-		t.addBinding(s.at("/simpleObject/stringProperty"), new StaticStringBinding("someBinding"));
+		t.addBinding(s.at("/someString"), new StringConstantBinding("someBinding"));
+		t.addBinding(s.at("/simpleObject/stringProperty"), new StringConstantBinding("someBinding"));
 		Iterator<SchemaNode> it = t.toBindIterator();
 		for (int i=0; i<2; i++) {
 			assertThat(it.next().getPath(), is(equalTo(expected[i])));
@@ -84,7 +94,7 @@ public class TransformationToBindIteratorTest {
 	
 		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Transformation t = new Transformation(s);
-		t.addBinding(s.at("/simpleObject/integerProperty"), new StaticIntegerBinding(12));
+		t.addBinding(s.at("/simpleObject/integerProperty"), new IntegerConstantBinding(12));
 		Iterator<SchemaNode> it = t.toBindIterator();
 		it.next();
 		it.next();

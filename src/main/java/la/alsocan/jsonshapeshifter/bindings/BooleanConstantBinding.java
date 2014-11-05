@@ -3,9 +3,9 @@ package la.alsocan.jsonshapeshifter.bindings;
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
  */
-public class StaticIntegerBinding extends StaticBinding<Integer> {
+public class BooleanConstantBinding extends AbstractConstantBinding<Boolean> {
 
-	public StaticIntegerBinding(Integer value) {
+	public BooleanConstantBinding(Boolean value) {
 		super(value);
 	}
 }

@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import la.alsocan.jsonshapeshifter.DataSet;
 import la.alsocan.jsonshapeshifter.Transformation;
-import la.alsocan.jsonshapeshifter.bindings.CollectionBinding;
+import la.alsocan.jsonshapeshifter.bindings.ArrayNodeBinding;
 import la.alsocan.jsonshapeshifter.bindings.IntegerNodeBinding;
-import la.alsocan.jsonshapeshifter.bindings.StaticIntegerBinding;
+import la.alsocan.jsonshapeshifter.bindings.IntegerConstantBinding;
 import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import la.alsocan.jsonshapeshifter.schemas.SchemaArrayNode;
@@ -39,9 +39,9 @@ public class SimpleCollectionTransformationTest {
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		it.next();
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someStringArray")));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
 		it.next();
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someIntegerArray")));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someIntegerArray")));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
 		JsonNode result = t.apply(payload);
@@ -62,9 +62,9 @@ public class SimpleCollectionTransformationTest {
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		it.next();
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someStringArray")));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
 		t.addBinding(it.next(), new StringNodeBinding(source.at("/someStringArray/{i}")));
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someIntegerArray")));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someIntegerArray")));
 		t.addBinding(it.next(), new IntegerNodeBinding(source.at("/someIntegerArray/{i}")));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
@@ -92,10 +92,10 @@ public class SimpleCollectionTransformationTest {
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		it.next();
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someStringArray")));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
 		t.addBinding(it.next(), new StringNodeBinding(source.at("/someString")));
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someIntegerArray")));
-		t.addBinding(it.next(), new StaticIntegerBinding(12));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someIntegerArray")));
+		t.addBinding(it.next(), new IntegerConstantBinding(12));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
 		JsonNode result = t.apply(payload);
@@ -118,7 +118,7 @@ public class SimpleCollectionTransformationTest {
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		it.next();
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someStringArray")));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
 		// not binding /someIntegerArray at all (should produce empty array)
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);

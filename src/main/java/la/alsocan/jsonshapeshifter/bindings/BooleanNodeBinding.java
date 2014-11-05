@@ -6,14 +6,14 @@ import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
  */
-public class StringNodeBinding extends AbstractNodeBinding<String> {
+public class BooleanNodeBinding extends AbstractNodeBinding<Boolean> {
 
-	public StringNodeBinding(SchemaNode source) {
+	public BooleanNodeBinding(SchemaNode source) {
 		super(source);
 	}
 
 	@Override
-	protected String readValue(JsonNode node) {
-		return node.asText();
+	protected Boolean readValue(JsonNode node) {
+		return node.asBoolean();
 	}
 }

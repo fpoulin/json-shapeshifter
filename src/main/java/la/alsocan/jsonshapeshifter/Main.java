@@ -10,13 +10,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import la.alsocan.jsonshapeshifter.bindings.ArrayConstantBinding;
 import la.alsocan.jsonshapeshifter.bindings.Binding;
-import la.alsocan.jsonshapeshifter.bindings.CollectionBinding;
-import la.alsocan.jsonshapeshifter.bindings.HandlebarsBinding;
-import la.alsocan.jsonshapeshifter.bindings.IntegerNodeBinding;
-import la.alsocan.jsonshapeshifter.bindings.StaticStringBinding;
+import la.alsocan.jsonshapeshifter.bindings.StringConstantBinding;
 import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
-import la.alsocan.jsonshapeshifter.schemas.SchemaArrayNode;
 
 /**
  * Test application to play with the transformations.
@@ -25,9 +22,9 @@ import la.alsocan.jsonshapeshifter.schemas.SchemaArrayNode;
  */
 public class Main {
 	
-	private final static String SOURCE_PAYLOAD = "target/classes/payloads/source1.json";
-	private final static String SOURCE_SCHEMA = "target/classes/schemas/source.json";
-	private final static String TARGET_SCHEMA = "target/classes/schemas/target.json";
+	private final static String SOURCE_PAYLOAD = "target/classes/payloads/allTypes.json";
+	private final static String SOURCE_SCHEMA = "target/classes/schemas/allTypes.json";
+	private final static String TARGET_SCHEMA = "target/classes/schemas/allTypes.json";
 	
 	/**
 	 * An entry point, to test the library in action.
@@ -49,18 +46,14 @@ public class Main {
 		// test template
 		String template = "Handlebars says: {{static}} {{node}} '{{nodeIncollection}}'";
 		Map<String, Binding> params = new HashMap<>();
-		params.put("static", new StaticStringBinding("type"));
+		params.put("static", new StringConstantBinding("type"));
 		params.put("node", new StringNodeBinding(source.at("/someSourceString")));
 		params.put("nodeIncollection", new StringNodeBinding(source.at("/someSourceStringArray/{i}/{i}")));
 		
 		// build the transformation incrementally
 		Transformation t = new Transformation(target);
 		Iterator<SchemaNode> remainings = t.toBindIterator();
-		t.addBinding(remainings.next(), new CollectionBinding((SchemaArrayNode)source.at("/someSourceStringArray")));
-		t.addBinding(remainings.next(), new CollectionBinding((SchemaArrayNode)source.at("/someSourceStringArray/{i}")));
-		t.addBinding(remainings.next(), new HandlebarsBinding(template, params));
-		t.addBinding(remainings.next(), new CollectionBinding((SchemaArrayNode)source.at("/someSourceIntegerArray")));
-		t.addBinding(remainings.next(), new IntegerNodeBinding(source.at("/someSourceIntegerArray/{i}")));
+		t.addBinding(remainings.next(), new ArrayConstantBinding(12));
 		
 		// produce something
 		System.out.println("\nResulting payload:");

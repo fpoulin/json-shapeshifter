@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import la.alsocan.jsonshapeshifter.DataSet;
 import la.alsocan.jsonshapeshifter.Transformation;
-import la.alsocan.jsonshapeshifter.bindings.CollectionBinding;
-import la.alsocan.jsonshapeshifter.bindings.StaticStringBinding;
+import la.alsocan.jsonshapeshifter.bindings.ArrayNodeBinding;
+import la.alsocan.jsonshapeshifter.bindings.StringConstantBinding;
 import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import la.alsocan.jsonshapeshifter.schemas.SchemaArrayNode;
@@ -31,8 +31,8 @@ public class AdvancedCollectionTransformationTest {
 		Transformation t = new Transformation(target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someArrayOfArray")));
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someArrayOfArray/{i}")));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someArrayOfArray")));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someArrayOfArray/{i}")));
 		t.addBinding(it.next(), new StringNodeBinding(source.at("/someArrayOfArray/{i}/{i}")));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.EMBEDDED_COLLECTION_PAYLOAD);
@@ -59,8 +59,8 @@ public class AdvancedCollectionTransformationTest {
 		Transformation t = new Transformation(target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someArrayOfArray")));
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someArrayOfArray/{i}")));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someArrayOfArray")));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someArrayOfArray/{i}")));
 		t.addBinding(it.next(), new StringNodeBinding(source.at("/someArrayOfArray/{i}/{i}")));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.EMBEDDED_COLLECTION_PAYLOAD);
@@ -93,9 +93,9 @@ public class AdvancedCollectionTransformationTest {
 		Transformation t = new Transformation(target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someArrayOfArray")));
-		t.addBinding(it.next(), new CollectionBinding((SchemaArrayNode)source.at("/someArrayOfArray/{i}")));
-		t.addBinding(it.next(), new StaticStringBinding("someString"));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someArrayOfArray")));
+		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someArrayOfArray/{i}")));
+		t.addBinding(it.next(), new StringConstantBinding("someString"));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.EMBEDDED_COLLECTION_PAYLOAD);
 		JsonNode result = t.apply(payload);

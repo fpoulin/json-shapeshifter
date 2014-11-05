@@ -9,15 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
  * @author Florian Poulin <https://github.com/fpoulin>
  */
-public class HandlebarsBinding extends Binding<String> {
+public class StringHandlebarsBinding extends Binding<String> {
 
 	private final Template template;
 	private final Map<String, Binding> params;
 	
-	public HandlebarsBinding(String template, Map<String, Binding> params) throws IOException {
+	public StringHandlebarsBinding(String template, Map<String, Binding> params) throws IOException {
 		
 		Handlebars handlebars = new Handlebars();
 		this.template = handlebars.compileInline(template);

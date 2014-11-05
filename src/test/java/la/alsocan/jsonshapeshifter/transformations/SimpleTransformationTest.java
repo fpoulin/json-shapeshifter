@@ -7,8 +7,8 @@ import java.util.Iterator;
 import la.alsocan.jsonshapeshifter.DataSet;
 import la.alsocan.jsonshapeshifter.Transformation;
 import la.alsocan.jsonshapeshifter.bindings.IntegerNodeBinding;
-import la.alsocan.jsonshapeshifter.bindings.StaticIntegerBinding;
-import la.alsocan.jsonshapeshifter.bindings.StaticStringBinding;
+import la.alsocan.jsonshapeshifter.bindings.IntegerConstantBinding;
+import la.alsocan.jsonshapeshifter.bindings.StringConstantBinding;
 import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
@@ -32,10 +32,10 @@ public class SimpleTransformationTest {
 		Transformation t = new Transformation(target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new StaticStringBinding("firstString"));
-		t.addBinding(it.next(), new StaticIntegerBinding(1));
-		t.addBinding(it.next(), new StaticStringBinding("secondString"));
-		t.addBinding(it.next(), new StaticIntegerBinding(2));
+		t.addBinding(it.next(), new StringConstantBinding("firstString"));
+		t.addBinding(it.next(), new IntegerConstantBinding(1));
+		t.addBinding(it.next(), new StringConstantBinding("secondString"));
+		t.addBinding(it.next(), new IntegerConstantBinding(2));
 		
 		JsonNode result = t.apply(null);
 		
@@ -52,8 +52,8 @@ public class SimpleTransformationTest {
 		Transformation t = new Transformation(target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new StaticStringBinding("firstString"));
-		t.addBinding(it.next(), new StaticIntegerBinding(1));
+		t.addBinding(it.next(), new StringConstantBinding("firstString"));
+		t.addBinding(it.next(), new IntegerConstantBinding(1));
 		
 		JsonNode result = t.apply(null);
 		

@@ -3,9 +3,9 @@ package la.alsocan.jsonshapeshifter.bindings;
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
  */
-public class StaticStringBinding extends StaticBinding<String> {
+public class StringConstantBinding extends AbstractConstantBinding<String> {
 
-	public StaticStringBinding(String value) {
+	public StringConstantBinding(String value) {
 		super(value);
 	}
 }
