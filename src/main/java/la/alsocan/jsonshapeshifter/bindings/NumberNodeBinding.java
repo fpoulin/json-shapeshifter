@@ -6,14 +6,14 @@ import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
  */
-public class NumberNodeBinding extends AbstractNodeBinding<Number> {
+public class NumberNodeBinding extends AbstractNodeBinding<Double> {
 
 	public NumberNodeBinding(SchemaNode source) {
 		super(source);
 	}
 
 	@Override
-	protected Number readValue(JsonNode node) {
-		return node.numberValue();
+	protected Double readValue(JsonNode node) {
+		return node.numberValue().doubleValue();
 	}
 }
