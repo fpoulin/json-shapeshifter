@@ -13,7 +13,7 @@ public class SchemaNode implements Comparable<SchemaNode> {
 	protected final boolean required;
 	private SchemaNode parent;
 	
-	public SchemaNode(String name, String path, ENodeType type, boolean required) {
+	protected SchemaNode(String name, String path, ENodeType type, boolean required) {
 		this.name = name;
 		this.path = path;
 		this.type = type;
@@ -21,7 +21,6 @@ public class SchemaNode implements Comparable<SchemaNode> {
 	}
 	
 	protected static final SchemaNode buildSchemaNode(JsonNode node, String name, String path, boolean required) {
-	
 		switch (node.get("type") != null ? node.get("type").asText() : "?") {
 			case "object":
 				return new SchemaObjectNode(name, path, required).withResolvedChildren(node);
@@ -47,7 +46,7 @@ public class SchemaNode implements Comparable<SchemaNode> {
 		return parent;
 	}
 	
-	public void setParent(SchemaNode parent) {
+	protected void setParent(SchemaNode parent) {
 		this.parent = parent;
 	}
 	
@@ -55,7 +54,7 @@ public class SchemaNode implements Comparable<SchemaNode> {
 		return name;
 	}
 	
-	public String getPath() {
+	public String getSchemaPointer() {
 		return path;
 	}
 	

@@ -65,7 +65,7 @@ public class Main {
 	public static void showPossibilities(Transformation t, SchemaNode target) {
 		
 		t.legalNodesFor(target).stream().forEach((source) -> {
-			System.out.println("   " + source.getPath());
+			System.out.println("   " + source.getSchemaPointer());
 		});
 		System.out.println();
 	} 

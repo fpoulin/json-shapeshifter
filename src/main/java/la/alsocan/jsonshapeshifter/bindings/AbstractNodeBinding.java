@@ -3,7 +3,6 @@ package la.alsocan.jsonshapeshifter.bindings;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
-import la.alsocan.jsonshapeshifter.utils.JsonPointerUtils;
 
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
@@ -23,9 +22,17 @@ public abstract class AbstractNodeBinding<T> extends Binding<T> {
 
 	@Override
 	public final T getValue(JsonNode payload, List<Integer> context) {
-		JsonNode node = payload.at(JsonPointerUtils.resolvePointer(source.getPath(), context));
+		JsonNode node = payload.at(jsonPointer(source.getSchemaPointer(), context));
 		return node == null ? null : readValue(node);
 	}
 	
 	protected abstract T readValue(JsonNode node);
+	
+	private static final String PATH_DELIMITER_REGEX = "\\{i\\}";
+	static String jsonPointer(String schemaPointer, List<Integer> context) {
+		for (Integer index : context) {
+			schemaPointer = schemaPointer.replaceFirst(PATH_DELIMITER_REGEX, String.valueOf(index));
+		}
+		return schemaPointer;
+	}
 }

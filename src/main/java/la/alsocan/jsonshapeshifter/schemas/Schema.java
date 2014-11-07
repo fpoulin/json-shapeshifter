@@ -1,7 +1,11 @@
 package la.alsocan.jsonshapeshifter.schemas;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jackson.JsonLoader;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -16,39 +20,98 @@ import java.util.TreeMap;
  */
 public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 	
-	public Schema(String name, String path, boolean required) {
-		super(name, path, required);
+	private final JsonNode schemaNode;
+	
+	private Schema(JsonNode schemaNode, String name, String schemaPointer, boolean required) {
+		super(name, schemaPointer, required);
+		this.schemaNode = schemaNode;
 	}
 	
+	/**
+	 * Build a {@link Schema} instance.
+	 * @param schemaPath Path to a valid Json schema file
+	 * @return A {@link Schema} instance
+	 * @throws IOException the schema file cannot be read
+	 */
 	public final static Schema buildSchema(String schemaPath) throws IOException {
 		return Schema.buildSchema(new File(schemaPath));
 	}
 	
+	/**
+	 * Build a {@link Schema} instance.
+	 * @param schemaFile A valid Json schema file
+	 * @return A {@link Schema} instance
+	 * @throws IOException the schema file cannot be read
+	 */
 	public final static Schema buildSchema(File schemaFile) throws IOException {
-		return buildSchema(JsonLoader.fromFile(schemaFile));
+		return Schema.buildSchema(new ObjectMapper().readTree(schemaFile));
 	}
 	
+	/**
+	 * Build a {@link Schema} instance.
+	 * @param schemaNode A {@link JsonNode} corresponding to a valid Json schema
+	 * @return A {@link Schema} instance
+	 */
 	public final static Schema buildSchema(JsonNode schemaNode) {
-		Schema schema = new Schema("", "", true);
+		Schema schema = new Schema(schemaNode, "", "", true);
 		schema.withResolvedChildren(schemaNode);
 		schema.buildIndex();
 		return schema;
+	}
+	
+	/**
+	 * Validate a {@link Schema} instance (payload) and return a processing report.
+	 * @param payload Any {@link JsonNode} (a Json payload)
+	 * @return A {@link ProcessingReport}
+	 * @throws ProcessingException a processing error occurred during validation
+	 * @see ProcessingReport#isSuccess() 
+	 */
+	public ProcessingReport validate(JsonNode payload) throws ProcessingException {
+		final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+		final JsonSchema schema = factory.getJsonSchema(schemaNode);
+		return schema.validate(payload);
+	}
+	
+	/**
+	 * Get the {@link SchemaNode} corresponding to the given <i>schema pointer</i>.
+	 * 
+	 * A <i>schema pointer</i> is equivalent to a 
+	 * <a href="http://tools.ietf.org/html/rfc6901" target="_blank">Json pointer</a> with 
+	 * the exception that elements within an array are indexed with the <code>{i}</code>
+	 * string (instead of a numeric value).<br/>
+	 * <br/>
+	 * Examples of valid <i>schema pointers</i>:
+	 * <ul>
+	 * <li><code>/anObject</code></li>
+	 * <li><code>/anObject/anArray</code></li>
+	 * <li><code>/anObject/anArray/{i}</code></li>
+	 * <li><code>/anObject/anArray/{i}/{i}</code></li>
+	 * <li><code>/anObject/anArray/{i}/{i}/someProp</code></li>
+	 * </ul>
+	 * 
+	 * @param schemaPointer A schema pointer
+	 * @return The {@link SchemaNode} corresponding to the given <i>schema pointer</i>, or
+	 * <code>null</code> if the node cannot be found
+	 */
+	public final SchemaNode at(String schemaPointer) {
+		return nodeIndex.get(schemaPointer);
 	}
 	
 	// FIXME: replace this with something more elegant
 	private final TreeMap<String, SchemaNode> nodeIndex = new TreeMap<>();
 	private void buildIndex(){
 		for (SchemaNode node : this) {
-			nodeIndex.put(node.getPath(), node);
+			nodeIndex.put(node.getSchemaPointer(), node);
 		}
-	}
-	public SchemaNode at(String path) {
-		return nodeIndex.get(path);
 	}
 
 	//<editor-fold defaultstate="collapsed" desc="Iterator">
+	/**
+	 * Returns an iterator over the {@link SchemaNode} elements of the schema.
+	 * @return an iterator over the {@link SchemaNode} elements of the schema
+	 */
 	@Override
-	public Iterator<SchemaNode> iterator() {
+	public final Iterator<SchemaNode> iterator() {
 		return new SchemaNodesIterator(this);
 	}
 	

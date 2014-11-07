@@ -18,5 +18,4 @@ public class Defaults {
 			@Override public boolean hasNext() { return false; }
 			@Override public JsonNode next()   { throw new NoSuchElementException(); }
 		};
-	
 }

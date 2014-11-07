@@ -14,11 +14,11 @@ public class SchemaObjectNode extends SchemaNode {
 
 	private final List<SchemaNode> children = new LinkedList<>();
 	
-	public SchemaObjectNode(String name, String path, boolean required) {
+	protected SchemaObjectNode(String name, String path, boolean required) {
 		super(name, path, ENodeType.OBJECT, required);
 	}
 
-	public SchemaObjectNode withResolvedChildren(JsonNode node) {
+	protected SchemaObjectNode withResolvedChildren(JsonNode node) {
 		JsonNode props = node.get("properties");
 		
 		// untyped objects not supported
@@ -42,19 +42,17 @@ public class SchemaObjectNode extends SchemaNode {
 		while (itNode.hasNext()) {
 			String childName = itName.next();
 			SchemaNode typedChild = buildSchemaNode(itNode.next(), childName, path + "/" + childName, reqSet.contains(childName));
-			addChild(typedChild);
+			children.add(typedChild);
 			typedChild.setParent(this);
 		}
 		return this;
 	}
 
-	//<editor-fold defaultstate="collapsed" desc="Getter & setter">
-	public final void addChild (SchemaNode element) {
-		children.add(element);
-	}
-	
+	/**
+	 * Get the schema nodes for the elements contained in this object node
+	 * @return the schema nodes for the elements contained in this object node
+	 */
 	public List<SchemaNode> getChildren() {
 		return children;
 	}
-	//</editor-fold>
 }

@@ -60,7 +60,7 @@ public class SchemaIteratorTest {
 		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Iterator<SchemaNode> it = s.iterator();
 		for (int i=0; i<5; i++) {
-			assertThat(it.next().getPath(), is(equalTo(expected[i])));
+			assertThat(it.next().getSchemaPointer(), is(equalTo(expected[i])));
 		}
 	}
 }
