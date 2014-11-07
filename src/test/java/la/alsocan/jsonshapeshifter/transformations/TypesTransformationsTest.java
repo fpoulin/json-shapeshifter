@@ -29,8 +29,9 @@ public class TypesTransformationsTest {
 	@Test
 	public void transformationShouldProduceDefaultsForAllTypes() throws IOException {
 	
+		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.ALL_TYPES_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.ALL_TYPES_SCHEMA));
-		Transformation t = new Transformation(target);
+		Transformation t = new Transformation(source, target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		t.addBinding(it.next(), new ArrayConstantBinding(1));

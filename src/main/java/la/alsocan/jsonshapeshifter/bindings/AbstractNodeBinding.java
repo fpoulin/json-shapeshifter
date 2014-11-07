@@ -16,6 +16,10 @@ public abstract class AbstractNodeBinding<T> extends Binding<T> {
 	public AbstractNodeBinding(SchemaNode source) {
 		this.source = source;
 	}
+	
+	public SchemaNode getSourceNode() {
+		return source;
+	}
 
 	@Override
 	public final T getValue(JsonNode payload, List<Integer> context) {

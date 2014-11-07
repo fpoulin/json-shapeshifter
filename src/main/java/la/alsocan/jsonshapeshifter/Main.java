@@ -4,16 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
-import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 import la.alsocan.jsonshapeshifter.schemas.Schema;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import la.alsocan.jsonshapeshifter.bindings.ArrayConstantBinding;
-import la.alsocan.jsonshapeshifter.bindings.Binding;
-import la.alsocan.jsonshapeshifter.bindings.StringConstantBinding;
-import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
+import la.alsocan.jsonshapeshifter.bindings.ArrayNodeBinding;
+import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 
 /**
  * Test application to play with the transformations.
@@ -22,9 +17,9 @@ import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
  */
 public class Main {
 	
-	private final static String SOURCE_PAYLOAD = "target/classes/payloads/allTypes.json";
-	private final static String SOURCE_SCHEMA = "target/classes/schemas/allTypes.json";
-	private final static String TARGET_SCHEMA = "target/classes/schemas/allTypes.json";
+	private final static String SOURCE_PAYLOAD = "target/classes/payloads/source.json";
+	private final static String SOURCE_SCHEMA = "target/classes/schemas/source.json";
+	private final static String TARGET_SCHEMA = "target/classes/schemas/target.json";
 	
 	/**
 	 * An entry point, to test the library in action.
@@ -43,17 +38,17 @@ public class Main {
 			return;
 		}
 		
-		// test template
-		String template = "Handlebars says: {{static}} {{node}} '{{nodeIncollection}}'";
-		Map<String, Binding> params = new HashMap<>();
-		params.put("static", new StringConstantBinding("type"));
-		params.put("node", new StringNodeBinding(source.at("/someSourceString")));
-		params.put("nodeIncollection", new StringNodeBinding(source.at("/someSourceStringArray/{i}/{i}")));
-		
 		// build the transformation incrementally
-		Transformation t = new Transformation(target);
-		Iterator<SchemaNode> remainings = t.toBindIterator();
-		t.addBinding(remainings.next(), new ArrayConstantBinding(12));
+		Transformation t = new Transformation(source, target);
+		Iterator<SchemaNode> it = t.toBindIterator();
+		t.addBinding(it.next(), new ArrayNodeBinding(source.at("/rootArray")));
+		showPossibilities(t, target.at("/rootArray/{i}/{i}/someArray/{i}"));
+		t.addBinding(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}")));
+		showPossibilities(t, target.at("/rootArray/{i}/{i}/someArray/{i}"));
+		it.next();
+		it.next();
+		t.addBinding(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}/{i}/someArray")));
+		showPossibilities(t, target.at("/rootArray/{i}/{i}/someArray/{i}"));
 		
 		// produce something
 		System.out.println("\nResulting payload:");
@@ -66,4 +61,12 @@ public class Main {
 			System.err.println("Oups: " + ex);
 		}
 	}
+	
+	public static void showPossibilities(Transformation t, SchemaNode target) {
+		
+		t.getAllowedNodeSources(target).stream().forEach((source) -> {
+			System.out.println("   " + source.getPath());
+		});
+		System.out.println();
+	} 
 }

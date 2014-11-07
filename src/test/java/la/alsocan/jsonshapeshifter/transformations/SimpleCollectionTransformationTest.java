@@ -35,7 +35,7 @@ public class SimpleCollectionTransformationTest {
 	
 		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
-		Transformation t = new Transformation(target);
+		Transformation t = new Transformation(source, target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		it.next();
@@ -58,7 +58,7 @@ public class SimpleCollectionTransformationTest {
 	
 		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
-		Transformation t = new Transformation(target);
+		Transformation t = new Transformation(source, target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		it.next();
@@ -88,7 +88,7 @@ public class SimpleCollectionTransformationTest {
 	
 		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
-		Transformation t = new Transformation(target);
+		Transformation t = new Transformation(source, target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		it.next();
@@ -114,7 +114,7 @@ public class SimpleCollectionTransformationTest {
 	
 		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
-		Transformation t = new Transformation(target);
+		Transformation t = new Transformation(source, target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		it.next();

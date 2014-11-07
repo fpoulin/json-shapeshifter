@@ -135,4 +135,64 @@ public class DataSet {
 		"  \"additionalProperties\" : false,\n" +
 		"	\"required\": [\"someArray\"]\n" +
 		"}";
+	
+	public static String COMPLEX_EMBEDDED_COLLECTION_SCHEMA = 
+		"{\n" +
+		"	\"$schema\": \"http://json-schema.org/draft-04/schema#\",\n" +
+		"	\"type\": \"object\",\n" +
+		"	\"properties\": {\n" +
+		"		\"rootString\" : {\n" +
+		"			\"type\": \"string\"\n" +
+		"		},\n" +
+		"		\"rootArray\": {\n" +
+		"			\"type\": \"array\",\n" +
+		"			\"items\": {\n" +
+		"				\"type\": \"array\",\n" +
+		"				\"items\": {\n" +
+		"					\"type\": \"object\",\n" +
+		"					\"properties\": {\n" +
+		"						\"someString\" : {\n" +
+		"							\"type\": \"string\"\n" +
+		"						},\n" +
+		"						\"anotherString\" : {\n" +
+		"							\"type\": \"string\"\n" +
+		"						},\n" +
+		"						\"someArray\" : {\n" +
+		"							\"type\": \"array\",\n" +
+		"							\"items\": {\n" +
+		"								\"type\": \"string\"\n" +
+		"							}\n" +
+		"						}\n" +
+		"					},\n" +
+		"					\"additionalProperties\" : false,\n" +
+		"					\"required\": [\"someString\", \"anotherString\", \"someArray\"]\n" +
+		"				}\n" +
+		"			}\n" +
+		"		}\n" +
+		"	},\n" +
+		"	\"additionalProperties\" : false,\n" +
+		"	\"required\": [\"rootArray\"]\n" +
+		"}";
+	
+	public static String COMPLEX_EMBEDDED_COLLECTION_PAYLOAD = 
+		"{\n" +
+		"	\"rootString\" : \"rootString\",\n" +
+		"	\"rootArray\": [\n" +
+		"		[{\n" +
+		"			\"someString\": \"value1\",\n" +
+		"			\"anotherString\": \"value2\",\n" +
+		"			\"someArray\": [\"a\", \"b\", \"c\", \"d\"]\n" +
+		"		}],\n" +
+		"		[{\n" +
+		"			\"someString\": \"value3\",\n" +
+		"			\"anotherString\": \"value4\",\n" +
+		"			\"someArray\": [\"e\", \"f\"]\n" +
+		"		}],\n" +
+		"		[{\n" +
+		"			\"someString\": \"value5\",\n" +
+		"			\"anotherString\": \"value6\",\n" +
+		"			\"someArray\": [\"g\"]\n" +
+		"		}]\n" +
+		"	]\n" +
+		"}";
 }

@@ -28,7 +28,7 @@ public class AdvancedCollectionTransformationTest {
 	
 		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.EMBEDDED_COLLECTION_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.EMBEDDED_COLLECTION_SCHEMA));
-		Transformation t = new Transformation(target);
+		Transformation t = new Transformation(source, target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someArrayOfArray")));
@@ -56,7 +56,7 @@ public class AdvancedCollectionTransformationTest {
 	
 		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.EMBEDDED_COLLECTION_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.EMBEDDED_COLLECTION_SCHEMA));
-		Transformation t = new Transformation(target);
+		Transformation t = new Transformation(source, target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someArrayOfArray")));
@@ -90,7 +90,7 @@ public class AdvancedCollectionTransformationTest {
 	
 		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.EMBEDDED_COLLECTION_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.EMBEDDED_COLLECTION_SCHEMA));
-		Transformation t = new Transformation(target);
+		Transformation t = new Transformation(source, target);
 		
 		Iterator<SchemaNode> it = t.toBindIterator();
 		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someArrayOfArray")));

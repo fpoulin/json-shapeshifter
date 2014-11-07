@@ -15,18 +15,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
+import la.alsocan.jsonshapeshifter.bindings.ArrayNodeBinding;
 
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
  */
 public class Transformation {
 	
+	private final Schema source;
 	private final Schema target;
 	
 	private final Map<SchemaNode, Binding<?>> bindings;
 	
-	public Transformation (Schema target) {
+	public Transformation (Schema source, Schema target) {
+		this.source = source;
 		this.target = target;
 		bindings = new TreeMap<>();
 	}
@@ -78,6 +83,38 @@ public class Transformation {
 	
 	public void addBinding(SchemaNode node, Binding<?> binding) {
 		bindings.put(node, binding);
+	}
+	
+	public Set<SchemaNode> getAllowedNodeSources(SchemaNode targetNode) {
+		
+		// explore from the root of the source schema (top to bottom)
+		Set<SchemaNode> sources = new TreeSet<>();
+		source.getChildren().stream().forEach((sourceNode) -> {
+			collectDown(sources, sourceNode, targetNode.getType());
+		});
+		
+		// explore from the target node (bottom to top)
+		SchemaNode current = targetNode;
+		while ((current = current.getParent()) != null) {
+			if (bindings.get(current) instanceof ArrayNodeBinding) {
+				SchemaArrayNode sourceNode = (SchemaArrayNode)((ArrayNodeBinding)bindings.get(current)).getSourceNode();
+				collectDown(sources, sourceNode, targetNode.getType());
+				collectDown(sources, sourceNode.getChild(), targetNode.getType());
+			}
+		}
+		return sources;
+	}
+	public void collectDown(Set<SchemaNode> sources, SchemaNode sourceNode, ENodeType type) {
+		
+		if (sourceNode.getType().equals(type)) {
+			sources.add(sourceNode);
+		}
+		
+		if (ENodeType.OBJECT.equals(sourceNode.getType())) {
+			((SchemaObjectNode)sourceNode).getChildren().stream().forEach((child) -> {
+				collectDown(sources, child, type);
+			});
+		}
 	}
 	
 	/**

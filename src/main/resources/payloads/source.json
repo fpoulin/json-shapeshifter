@@ -1,0 +1,20 @@
+{
+	"rootString" : "rootString",
+	"rootArray": [
+		[{
+			"someString": "value1",
+			"anotherString": "value2",
+			"someArray": ["a", "b", "c", "d"]
+		}],
+		[{
+			"someString": "value3",
+			"anotherString": "value4",
+			"someArray": ["e", "f"]
+		}],
+		[{
+			"someString": "value5",
+			"anotherString": "value6",
+			"someArray": ["g"]
+		}]
+	]
+}

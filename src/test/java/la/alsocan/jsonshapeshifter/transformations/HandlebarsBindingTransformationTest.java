@@ -31,8 +31,9 @@ public class HandlebarsBindingTransformationTest {
 	@Test
 	public void staticHandlebarsBindingShouldProduceRightResult() throws IOException {
 		
+		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
-		Transformation t = new Transformation(target);
+		Transformation t = new Transformation(source, target);
 		
 		String template = "Hello {{world}}";
 		Map<String, Binding> params = new HashMap<>();
@@ -53,7 +54,7 @@ public class HandlebarsBindingTransformationTest {
 		
 		Schema source = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
-		Transformation t = new Transformation(target);
+		Transformation t = new Transformation(source, target);
 		
 		String template = "{{someString}} {{stringInArray}}";
 		Map<String, Binding> params = new HashMap<>();
