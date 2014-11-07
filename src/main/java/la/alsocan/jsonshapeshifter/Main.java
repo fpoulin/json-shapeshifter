@@ -40,14 +40,14 @@ public class Main {
 		
 		// build the transformation incrementally
 		Transformation t = new Transformation(source, target);
-		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new ArrayNodeBinding(source.at("/rootArray")));
+		Iterator<SchemaNode> it = t.toBind();
+		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootArray")));
 		showPossibilities(t, target.at("/rootArray/{i}/{i}/someArray/{i}"));
-		t.addBinding(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}")));
+		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}")));
 		showPossibilities(t, target.at("/rootArray/{i}/{i}/someArray/{i}"));
 		it.next();
 		it.next();
-		t.addBinding(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}/{i}/someArray")));
+		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}/{i}/someArray")));
 		showPossibilities(t, target.at("/rootArray/{i}/{i}/someArray/{i}"));
 		
 		// produce something
@@ -64,7 +64,7 @@ public class Main {
 	
 	public static void showPossibilities(Transformation t, SchemaNode target) {
 		
-		t.getAllowedNodeSources(target).stream().forEach((source) -> {
+		t.legalNodesFor(target).stream().forEach((source) -> {
 			System.out.println("   " + source.getPath());
 		});
 		System.out.println();

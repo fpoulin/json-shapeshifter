@@ -1,7 +1,6 @@
 package la.alsocan.jsonshapeshifter.schemas;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import la.alsocan.jsonshapeshifter.schemas.visitors.ITypedNodeVisitor;
 import com.github.fge.jackson.JsonLoader;
 import java.io.File;
 import java.io.IOException;
@@ -46,16 +45,6 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 	public SchemaNode at(String path) {
 		return nodeIndex.get(path);
 	}
-
-	//<editor-fold defaultstate="collapsed" desc="Visitor">
-	@Override
-	public final void accept(ITypedNodeVisitor visitor) {
-		getChildren().stream().forEach((node) -> {
-			node.accept(visitor);
-		});
-		visitor.endVisit();
-	}
-	//</editor-fold>
 
 	//<editor-fold defaultstate="collapsed" desc="Iterator">
 	@Override

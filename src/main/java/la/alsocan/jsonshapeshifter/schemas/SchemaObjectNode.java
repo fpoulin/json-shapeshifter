@@ -1,7 +1,6 @@
 package la.alsocan.jsonshapeshifter.schemas;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import la.alsocan.jsonshapeshifter.schemas.visitors.ITypedNodeVisitor;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -56,17 +55,6 @@ public class SchemaObjectNode extends SchemaNode {
 	
 	public List<SchemaNode> getChildren() {
 		return children;
-	}
-	//</editor-fold>
-	
-	//<editor-fold defaultstate="collapsed" desc="Visitor">
-	@Override
-	protected void accept(ITypedNodeVisitor visitor) {
-		visitor.visitObject(this);
-		children.stream().forEach((child) -> {
-			child.accept(visitor);
-		});
-		visitor.endVisitObject(this);
 	}
 	//</editor-fold>
 }

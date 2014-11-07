@@ -28,7 +28,7 @@ public class TransformationToBindIteratorTest {
 	public void hasNextShouldOnlyReturnFalseForLastNode() throws IOException {
 	
 		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
-		Iterator<SchemaNode> it = new Transformation(s, s).toBindIterator();
+		Iterator<SchemaNode> it = new Transformation(s, s).toBind();
 		for (int i=0; i<4; i++) {
 			assertThat(it.hasNext(), is(true));
 			it.next();
@@ -40,7 +40,7 @@ public class TransformationToBindIteratorTest {
 	public void nextShouldOnlyThrowExceptionAfterLastNode() throws IOException {
 	
 		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
-		Iterator<SchemaNode> it = new Transformation(s, s).toBindIterator();
+		Iterator<SchemaNode> it = new Transformation(s, s).toBind();
 		for (int i=0; i<4; i++) {
 			assertThat(it.next(), is(not(nullValue())));
 		}
@@ -56,7 +56,7 @@ public class TransformationToBindIteratorTest {
 	public void iteratorShouldIgnoreObjectNodes() throws IOException {
 	
 		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
-		Iterator<SchemaNode> it = new Transformation(s, s).toBindIterator();
+		Iterator<SchemaNode> it = new Transformation(s, s).toBind();
 		while (it.hasNext()) {
 			assertThat(it.next().getPath(), is(not(equalTo("/simpleObject"))));
 		}
@@ -66,7 +66,7 @@ public class TransformationToBindIteratorTest {
 	public void iteratorShouldIgnoreNullNodes() throws IOException {
 	
 		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.ALL_TYPES_SCHEMA));
-		Iterator<SchemaNode> it = new Transformation(s, s).toBindIterator();
+		Iterator<SchemaNode> it = new Transformation(s, s).toBind();
 		while (it.hasNext()) {
 			assertThat(it.next().getPath(), is(not(equalTo("/someArray/{i}/someNull"))));
 		}
@@ -81,9 +81,9 @@ public class TransformationToBindIteratorTest {
 		
 		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Transformation t = new Transformation(s, s);
-		t.addBinding(s.at("/someString"), new StringConstantBinding("someBinding"));
-		t.addBinding(s.at("/simpleObject/stringProperty"), new StringConstantBinding("someBinding"));
-		Iterator<SchemaNode> it = t.toBindIterator();
+		t.bind(s.at("/someString"), new StringConstantBinding("someBinding"));
+		t.bind(s.at("/simpleObject/stringProperty"), new StringConstantBinding("someBinding"));
+		Iterator<SchemaNode> it = t.toBind();
 		for (int i=0; i<2; i++) {
 			assertThat(it.next().getPath(), is(equalTo(expected[i])));
 		}
@@ -94,8 +94,8 @@ public class TransformationToBindIteratorTest {
 	
 		Schema s = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Transformation t = new Transformation(s, s);
-		t.addBinding(s.at("/simpleObject/integerProperty"), new IntegerConstantBinding(12));
-		Iterator<SchemaNode> it = t.toBindIterator();
+		t.bind(s.at("/simpleObject/integerProperty"), new IntegerConstantBinding(12));
+		Iterator<SchemaNode> it = t.toBind();
 		it.next();
 		it.next();
 		it.next();

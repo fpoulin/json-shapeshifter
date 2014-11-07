@@ -33,8 +33,8 @@ public class TypesTransformationsTest {
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.ALL_TYPES_SCHEMA));
 		Transformation t = new Transformation(source, target);
 		
-		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new ArrayConstantBinding(1));
+		Iterator<SchemaNode> it = t.toBind();
+		t.bind(it.next(), new ArrayConstantBinding(1));
 		
 		JsonNode result = t.apply(null);
 		

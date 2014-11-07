@@ -1,7 +1,6 @@
 package la.alsocan.jsonshapeshifter.schemas;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import la.alsocan.jsonshapeshifter.schemas.visitors.ITypedNodeVisitor;
 
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
@@ -69,15 +68,6 @@ public class SchemaNode implements Comparable<SchemaNode> {
 	}
 	//</editor-fold>
 	
-	//<editor-fold defaultstate="collapsed" desc="Visitor">
-	/**
-	 * @param visitor A visitor (from the visitor pattern)
-	 */
-	protected void accept(ITypedNodeVisitor visitor) {
-		visitor.visit(this);
-	}
-	//</editor-fold>
-
 	@Override
 	public int compareTo(SchemaNode o) {
 		return path.compareTo(o.path);

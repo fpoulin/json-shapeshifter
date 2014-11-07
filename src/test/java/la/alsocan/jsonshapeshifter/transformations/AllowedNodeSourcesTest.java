@@ -29,17 +29,17 @@ public class AllowedNodeSourcesTest {
 		
 		SchemaNode observedNode = target.at("/rootArray/{i}/{i}/someArray/{i}");
 		
-		Iterator<SchemaNode> it = t.toBindIterator();
+		Iterator<SchemaNode> it = t.toBind();
 		it.next();
-		t.addBinding(it.next(), new ArrayNodeBinding(source.at("/rootArray")));
+		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootArray")));
 		
-		Set<SchemaNode> allowedNodes = t.getAllowedNodeSources(observedNode);
+		Set<SchemaNode> allowedNodes = t.legalNodesFor(observedNode);
 		assertThat(allowedNodes.size(), is(equalTo(1)));
 		assertThat(allowedNodes, hasItem(source.at("/rootString")));
 		
-		t.addBinding(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}")));
+		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}")));
 		
-		allowedNodes = t.getAllowedNodeSources(observedNode);
+		allowedNodes = t.legalNodesFor(observedNode);
 		assertThat(allowedNodes.size(), is(equalTo(3)));
 		assertThat(allowedNodes, hasItem(source.at("/rootString")));
 		assertThat(allowedNodes, hasItem(source.at("/rootArray/{i}/{i}/someString")));
@@ -47,9 +47,9 @@ public class AllowedNodeSourcesTest {
 		
 		it.next();
 		it.next();
-		t.addBinding(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}/{i}/someArray")));
+		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}/{i}/someArray")));
 		
-		allowedNodes = t.getAllowedNodeSources(observedNode);
+		allowedNodes = t.legalNodesFor(observedNode);
 		assertThat(allowedNodes.size(), is(equalTo(4)));
 		assertThat(allowedNodes, hasItem(source.at("/rootString")));
 		assertThat(allowedNodes, hasItem(source.at("/rootArray/{i}/{i}/someString")));

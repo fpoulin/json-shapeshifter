@@ -39,8 +39,8 @@ public class HandlebarsBindingTransformationTest {
 		Map<String, Binding> params = new HashMap<>();
 		params.put("world", new StringConstantBinding("world"));
 		
-		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new StringHandlebarsBinding(template, params));
+		Iterator<SchemaNode> it = t.toBind();
+		t.bind(it.next(), new StringHandlebarsBinding(template, params));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
 		JsonNode result = t.apply(payload);
@@ -61,10 +61,10 @@ public class HandlebarsBindingTransformationTest {
 		params.put("someString", new StringNodeBinding(source.at("/someString")));
 		params.put("stringInArray", new StringNodeBinding(source.at("/someStringArray/{i}")));
 		
-		Iterator<SchemaNode> it = t.toBindIterator();
+		Iterator<SchemaNode> it = t.toBind();
 		it.next();
-		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
-		t.addBinding(it.next(), new StringHandlebarsBinding(template, params));
+		t.bind(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
+		t.bind(it.next(), new StringHandlebarsBinding(template, params));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
 		JsonNode result = t.apply(payload);

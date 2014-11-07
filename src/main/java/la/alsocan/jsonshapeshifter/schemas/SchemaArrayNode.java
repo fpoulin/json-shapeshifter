@@ -1,7 +1,6 @@
 package la.alsocan.jsonshapeshifter.schemas;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import la.alsocan.jsonshapeshifter.schemas.visitors.ITypedNodeVisitor;
 
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
@@ -36,15 +35,6 @@ public class SchemaArrayNode extends SchemaNode {
 	
 	public final SchemaNode getChild(){
 		return child;
-	}
-	//</editor-fold>
-	
-	//<editor-fold defaultstate="collapsed" desc="Visitor">
-	@Override
-	protected void accept(ITypedNodeVisitor visitor) {
-		visitor.visitArray(this);
-		child.accept(visitor);
-		visitor.endVisitArray(this);
 	}
 	//</editor-fold>
 }

@@ -37,11 +37,11 @@ public class SimpleCollectionTransformationTest {
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
 		Transformation t = new Transformation(source, target);
 		
-		Iterator<SchemaNode> it = t.toBindIterator();
+		Iterator<SchemaNode> it = t.toBind();
 		it.next();
-		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
+		t.bind(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
 		it.next();
-		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someIntegerArray")));
+		t.bind(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someIntegerArray")));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
 		JsonNode result = t.apply(payload);
@@ -60,12 +60,12 @@ public class SimpleCollectionTransformationTest {
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
 		Transformation t = new Transformation(source, target);
 		
-		Iterator<SchemaNode> it = t.toBindIterator();
+		Iterator<SchemaNode> it = t.toBind();
 		it.next();
-		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
-		t.addBinding(it.next(), new StringNodeBinding(source.at("/someStringArray/{i}")));
-		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someIntegerArray")));
-		t.addBinding(it.next(), new IntegerNodeBinding(source.at("/someIntegerArray/{i}")));
+		t.bind(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
+		t.bind(it.next(), new StringNodeBinding(source.at("/someStringArray/{i}")));
+		t.bind(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someIntegerArray")));
+		t.bind(it.next(), new IntegerNodeBinding(source.at("/someIntegerArray/{i}")));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
 		JsonNode result = t.apply(payload);
@@ -90,12 +90,12 @@ public class SimpleCollectionTransformationTest {
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
 		Transformation t = new Transformation(source, target);
 		
-		Iterator<SchemaNode> it = t.toBindIterator();
+		Iterator<SchemaNode> it = t.toBind();
 		it.next();
-		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
-		t.addBinding(it.next(), new StringNodeBinding(source.at("/someString")));
-		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someIntegerArray")));
-		t.addBinding(it.next(), new IntegerConstantBinding(12));
+		t.bind(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
+		t.bind(it.next(), new StringNodeBinding(source.at("/someString")));
+		t.bind(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someIntegerArray")));
+		t.bind(it.next(), new IntegerConstantBinding(12));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);
 		JsonNode result = t.apply(payload);
@@ -116,9 +116,9 @@ public class SimpleCollectionTransformationTest {
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_SCHEMA));
 		Transformation t = new Transformation(source, target);
 		
-		Iterator<SchemaNode> it = t.toBindIterator();
+		Iterator<SchemaNode> it = t.toBind();
 		it.next();
-		t.addBinding(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
+		t.bind(it.next(), new ArrayNodeBinding((SchemaArrayNode)source.at("/someStringArray")));
 		// not binding /someIntegerArray at all (should produce empty array)
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_COLLECTION_PAYLOAD);

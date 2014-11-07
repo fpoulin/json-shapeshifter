@@ -44,7 +44,7 @@ public class Transformation {
 	 * 
 	 * @return An iterator for nodes still requiring a binding
 	 */
-	public Iterator<SchemaNode> toBindIterator() {
+	public Iterator<SchemaNode> toBind() {
 		
 		final Iterator<SchemaNode> itNodes = target.iterator();
 		return new Iterator<SchemaNode>() {
@@ -81,11 +81,11 @@ public class Transformation {
 		};
 	}
 	
-	public void addBinding(SchemaNode node, Binding<?> binding) {
+	public void bind(SchemaNode node, Binding<?> binding) {
 		bindings.put(node, binding);
 	}
 	
-	public Set<SchemaNode> getAllowedNodeSources(SchemaNode targetNode) {
+	public Set<SchemaNode> legalNodesFor(SchemaNode targetNode) {
 		
 		// explore from the root of the source schema (top to bottom)
 		Set<SchemaNode> sources = new TreeSet<>();

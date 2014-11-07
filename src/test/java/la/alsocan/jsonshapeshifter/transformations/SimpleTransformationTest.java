@@ -32,11 +32,11 @@ public class SimpleTransformationTest {
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Transformation t = new Transformation(source, target);
 		
-		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new StringConstantBinding("firstString"));
-		t.addBinding(it.next(), new IntegerConstantBinding(1));
-		t.addBinding(it.next(), new StringConstantBinding("secondString"));
-		t.addBinding(it.next(), new IntegerConstantBinding(2));
+		Iterator<SchemaNode> it = t.toBind();
+		t.bind(it.next(), new StringConstantBinding("firstString"));
+		t.bind(it.next(), new IntegerConstantBinding(1));
+		t.bind(it.next(), new StringConstantBinding("secondString"));
+		t.bind(it.next(), new IntegerConstantBinding(2));
 		
 		JsonNode result = t.apply(null);
 		
@@ -53,9 +53,9 @@ public class SimpleTransformationTest {
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Transformation t = new Transformation(source, target);
 		
-		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new StringConstantBinding("firstString"));
-		t.addBinding(it.next(), new IntegerConstantBinding(1));
+		Iterator<SchemaNode> it = t.toBind();
+		t.bind(it.next(), new StringConstantBinding("firstString"));
+		t.bind(it.next(), new IntegerConstantBinding(1));
 		
 		JsonNode result = t.apply(null);
 		
@@ -70,11 +70,11 @@ public class SimpleTransformationTest {
 		Schema target = Schema.buildSchema(new ObjectMapper().readTree(DataSet.SIMPLE_SCHEMA));
 		Transformation t = new Transformation(source, target);
 		
-		Iterator<SchemaNode> it = t.toBindIterator();
-		t.addBinding(it.next(), new StringNodeBinding(source.at("/simpleObject/stringProperty")));
-		t.addBinding(it.next(), new IntegerNodeBinding(source.at("/simpleObject/integerProperty")));
-		t.addBinding(it.next(), new StringNodeBinding(source.at("/someString")));
-		t.addBinding(it.next(), new IntegerNodeBinding(source.at("/someInteger")));
+		Iterator<SchemaNode> it = t.toBind();
+		t.bind(it.next(), new StringNodeBinding(source.at("/simpleObject/stringProperty")));
+		t.bind(it.next(), new IntegerNodeBinding(source.at("/simpleObject/integerProperty")));
+		t.bind(it.next(), new StringNodeBinding(source.at("/someString")));
+		t.bind(it.next(), new IntegerNodeBinding(source.at("/someInteger")));
 		
 		JsonNode payload = new ObjectMapper().readTree(DataSet.SIMPLE_PAYLOAD);
 		JsonNode result = t.apply(payload);
