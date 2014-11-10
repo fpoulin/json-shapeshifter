@@ -21,6 +21,22 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.5</version>
+				<extensions>true</extensions>
+				<configuration>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<serverId>ossrh-releases-la.alsocan</serverId>
+					<stagingProfileId>86d7262bca11ea</stagingProfileId>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
 	<dependencies>
 		
 		<dependency>
