@@ -154,9 +154,36 @@ public class Transformation {
 		return sources;
 	}
 	private void collectDown(Set<SchemaNode> sources, SchemaNode sourceNode, ENodeType type) {
-		if (sourceNode.getType().equals(type)) {
-			sources.add(sourceNode);
+		
+		// add compatible nodes (ignore null and object nodes)
+		switch(type) {
+			case ARRAY:
+			case BOOLEAN:
+			case INTEGER:
+				if (sourceNode.getType().equals(type)) {
+					sources.add(sourceNode);
+				}
+				break;
+			case NUMBER:
+				switch(sourceNode.getType()) {
+					case INTEGER:
+					case NUMBER:
+						sources.add(sourceNode);
+						break;
+				}
+				break;
+			case STRING:
+				switch(sourceNode.getType()) {
+					case BOOLEAN:
+					case INTEGER:
+					case NUMBER:
+					case STRING:
+						sources.add(sourceNode);
+						break;
+				}
 		}
+
+		// explore object children nodes
 		if (ENodeType.OBJECT.equals(sourceNode.getType())) {
 			((SchemaObjectNode)sourceNode).getChildren().stream().forEach((child) -> {
 				collectDown(sources, child, type);
