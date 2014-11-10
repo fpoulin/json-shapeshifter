@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
  */
-public class Defaults {
+public class Default {
 	
 	public static final Boolean DEFAULT_BOOLEAN = false;
 	public static final Integer DEFAULT_INTEGER = 0;

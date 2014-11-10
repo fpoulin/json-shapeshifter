@@ -19,6 +19,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import la.alsocan.jsonshapeshifter.bindings.ArrayNodeBinding;
+import la.alsocan.jsonshapeshifter.bindings.BooleanNodeBinding;
+import la.alsocan.jsonshapeshifter.bindings.IllegalBindingException;
+import la.alsocan.jsonshapeshifter.bindings.IntegerNodeBinding;
+import la.alsocan.jsonshapeshifter.bindings.NumberNodeBinding;
+import la.alsocan.jsonshapeshifter.bindings.StringHandlebarsBinding;
+import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
 
 /**
  * @author Florian Poulin <https://github.com/fpoulin>
@@ -30,6 +36,12 @@ public class Transformation {
 	
 	private final Map<SchemaNode, Binding<?>> bindings;
 	
+	/**
+	 * Build a new transformation.
+	 * 
+	 * @param source The source schema
+	 * @param target The target schema
+	 */
 	public Transformation (Schema source, Schema target) {
 		this.source = source;
 		this.target = target;
@@ -37,12 +49,15 @@ public class Transformation {
 	}
 	
 	/**
-	 * Iterates through the target schema to look for nodes requiring binding. This uses
-	 * an iterator on the schema (which traverses the whole structure) but skips nodes 
-	 * which already have a binding defined as well as object and null nodes (which do not 
-	 * require any binding). The iteration order is based on the Json schema definition.
+	 * Iterates through the target schema to look for {@link SchemaNode} still requiring a 
+	 * binding. This iterates through the nodes of the target schema but skips those which 
+	 * already have a binding defined as well as <i>object</i> and <i>null</i> nodes (which
+	 * do not require any binding).<br/>
+	 * <br/>
+	 * When {@link Iterator#hasNext()} returns <code>false</code>, the transformation can 
+	 * be considered fully defined (and invoking {@link #apply(JsonNode)} is safe).
 	 * 
-	 * @return An iterator for nodes still requiring a binding
+	 * @return An iterator for all target {@link SchemaNode} still requiring a binding
 	 */
 	public Iterator<SchemaNode> toBind() {
 		
@@ -81,35 +96,67 @@ public class Transformation {
 		};
 	}
 	
-	public void bind(SchemaNode node, Binding<?> binding) {
-		bindings.put(node, binding);
+	/**
+	 * Define a {@link Binding} for the given target schema node. If the binding
+	 * references one or several nodes (i.e. it is not a <i>constant</i> binding), the 
+	 * source node(s) have to be compatible with the target schema node (otherwise an 
+	 * {@link IllegalBindingException} will be thrown).
+	 * 
+	 * @param targetNode The target node for which a binding must be added
+	 * @param binding A binding for the target node
+	 * @throws IllegalBindingException The binding provided is not allowed for the given
+	 * target node (or is <code>null</code>)
+	 * @see #legalNodesFor(la.alsocan.jsonshapeshifter.schemas.SchemaNode) 
+	 */
+	public void bind(SchemaNode targetNode, Binding binding) {
+		if (binding == null || (!binding.getSourceNodes().isEmpty() 
+			&& !legalNodesFor(targetNode).containsAll(binding.getSourceNodes()))) {
+			throw new IllegalBindingException();
+		}
+		bindings.put(targetNode, binding);
 	}
 	
+	/**
+	 * Returns a set of {@link SchemaNode} which can be used as source for the given target
+	 * node. This method inspects the current state of the transformation (i.e. the set of 
+	 * bindings already defined) and tells you which nodes from the source schema can be 
+	 * used in a node binding for the given target node.<br/>
+	 * <br/>
+	 * Use this method before invoking {@link #bind(SchemaNode, Binding)} with a node 
+	 * binding (refer to the <i>see</i> section below for the list of node bindings).
+	 * 
+	 * @param targetNode The target node to inspect
+	 * @return A set of source nodes which can be used in a binding for this target node
+	 * @see ArrayNodeBinding
+	 * @see BooleanNodeBinding
+	 * @see IntegerNodeBinding
+	 * @see NumberNodeBinding
+	 * @see StringHandlebarsBinding
+	 * @see StringNodeBinding
+	 */
 	public Set<SchemaNode> legalNodesFor(SchemaNode targetNode) {
 		
-		// explore from the root of the source schema (top to bottom)
+		// explore from the root of the source schema (top to bottom, no array traversal)
 		Set<SchemaNode> sources = new TreeSet<>();
 		source.getChildren().stream().forEach((sourceNode) -> {
 			collectDown(sources, sourceNode, targetNode.getType());
 		});
 		
-		// explore from the target node (bottom to top)
+		// explore from the target node (bottom to top, traverse arrays with binding)
 		SchemaNode current = targetNode;
 		while ((current = current.getParent()) != null) {
 			if (bindings.get(current) instanceof ArrayNodeBinding) {
-				SchemaArrayNode sourceNode = (SchemaArrayNode)((ArrayNodeBinding)bindings.get(current)).getSourceNode();
+				SchemaArrayNode sourceNode = (SchemaArrayNode)((ArrayNodeBinding)bindings.get(current)).getSourceNodes().iterator().next();
 				collectDown(sources, sourceNode, targetNode.getType());
 				collectDown(sources, sourceNode.getChild(), targetNode.getType());
 			}
 		}
 		return sources;
 	}
-	public void collectDown(Set<SchemaNode> sources, SchemaNode sourceNode, ENodeType type) {
-		
+	private void collectDown(Set<SchemaNode> sources, SchemaNode sourceNode, ENodeType type) {
 		if (sourceNode.getType().equals(type)) {
 			sources.add(sourceNode);
 		}
-		
 		if (ENodeType.OBJECT.equals(sourceNode.getType())) {
 			((SchemaObjectNode)sourceNode).getChildren().stream().forEach((child) -> {
 				collectDown(sources, child, type);
@@ -118,7 +165,11 @@ public class Transformation {
 	}
 	
 	/**
-	 * Temporary method to apply a transformation.
+	 * Transforms the given Json instance of the source schema to a Json instance of the 
+	 * target schema. The transformation applies all bindings defined in the 
+	 * transformation. Missing bindings will produce {@link Default} values (therefore
+	 * the transformation always produces a result, even if there are missing bindings).
+	 * 
 	 * @param payload the payload to transform
 	 * @return A transformed Json payload following the transformation definition.
 	 */
@@ -127,18 +178,16 @@ public class Transformation {
 		ObjectNode root = om.createObjectNode();
 		List<Integer> pointerContext = new ArrayList<>();
 		target.getChildren().stream().forEach((tNode) -> {
-			resolve(om, tNode, root, payload, pointerContext);
+			resolveNode(om, tNode, root, payload, pointerContext);
 		});
 		return root;
 	}
-
-	// FIXME factorize this huge method
-	public void resolve(ObjectMapper om, SchemaNode node, JsonNode parentNode, JsonNode payload, List<Integer> pointerContext) {
+	private void resolveNode(ObjectMapper om, SchemaNode node, JsonNode parentNode, JsonNode payload, List<Integer> pointerContext) {
 		switch(node.getType()) {
 		case OBJECT:
 			ObjectNode oNode = om.createObjectNode();
 			((SchemaObjectNode)node).getChildren().stream().forEach((tChildNode) -> {
-				resolve(om, tChildNode, oNode, payload, pointerContext);
+				resolveNode(om, tChildNode, oNode, payload, pointerContext);
 			});
 			if (parentNode.isObject()) {
 				((ObjectNode)parentNode).set(node.getName(), oNode);
@@ -154,7 +203,7 @@ public class Transformation {
 			Iterator<JsonNode> it = (Iterator<JsonNode>)resolveValue(node, payload, pointerContext);
 			while (it.hasNext()) {
 				it.next();
-				resolve(om, tChildNode, aNode, payload, pointerContext);
+				resolveNode(om, tChildNode, aNode, payload, pointerContext);
 				pointerContext.set(pointerContext.size()-1, ++index);
 			}
 			pointerContext.remove(pointerContext.size()-1);
@@ -201,22 +250,21 @@ public class Transformation {
 			break;
 		}
 	}
-	
 	private Object resolveValue(SchemaNode node, JsonNode payload, List<Integer> pointerContext) {
 		Binding<?> b = (Binding<?>)bindings.get(node);
 		Object value;
 		if (b == null || (value = b.getValue(payload, pointerContext)) == null) {
 			switch(node.getType()) {
 				case ARRAY:
-					return Defaults.DEFAULT_ARRAY;
+					return Default.DEFAULT_ARRAY;
 				case BOOLEAN:
-					return Defaults.DEFAULT_BOOLEAN;
+					return Default.DEFAULT_BOOLEAN;
 				case INTEGER:
-					return Defaults.DEFAULT_INTEGER;
+					return Default.DEFAULT_INTEGER;
 				case NUMBER:
-					return Defaults.DEFAULT_NUMBER;
+					return Default.DEFAULT_NUMBER;
 				case STRING:
-					return Defaults.DEFAULT_STRING;
+					return Default.DEFAULT_STRING;
 				default:
 					return null;
 			}

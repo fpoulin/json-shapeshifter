@@ -1,7 +1,9 @@
 package la.alsocan.jsonshapeshifter.bindings;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 
 /**
@@ -16,8 +18,11 @@ public abstract class AbstractNodeBinding<T> extends Binding<T> {
 		this.source = source;
 	}
 	
-	public SchemaNode getSourceNode() {
-		return source;
+	@Override
+	public Set<SchemaNode> getSourceNodes() {
+		Set<SchemaNode> nodes = new HashSet<>();
+		nodes.add(source);
+		return nodes;
 	}
 
 	@Override
