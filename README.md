@@ -9,7 +9,7 @@ Although it *does transform* Json to Json, its primary focus is on the *process 
 
 # TL;DR --> Code
 
-```
+```java
 Schema source = Schema.buildSchema("source.json");
 Schema target = Schema.buildSchema("target.json");
 
