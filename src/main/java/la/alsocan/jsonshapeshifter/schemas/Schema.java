@@ -16,7 +16,7 @@ import java.util.Stack;
 import java.util.TreeMap;
 
 /**
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  */
 public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 	
@@ -78,8 +78,8 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 	 * A <i>schema pointer</i> is equivalent to a 
 	 * <a href="http://tools.ietf.org/html/rfc6901" target="_blank">Json pointer</a> with 
 	 * the exception that elements within an array are indexed with the <code>{i}</code>
-	 * string (instead of a numeric value).<br/>
-	 * <br/>
+	 * string (instead of a numeric value).<br>
+	 * <br>
 	 * Examples of valid <i>schema pointers</i>:
 	 * <ul>
 	 * <li><code>/anObject</code></li>

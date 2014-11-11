@@ -2,7 +2,7 @@ package la.alsocan.jsonshapeshifter;
 
 /**
  *
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  */
 public class DataSet {
 	

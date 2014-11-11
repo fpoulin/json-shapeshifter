@@ -13,4 +13,15 @@
 			<exec.executable>java</exec.executable>
 		</properties>
 	</action>
+	<action>
+		<actionName>CUSTOM-stage</actionName>
+		<displayName>Stage</displayName>
+		<goals>
+			<goal>clean</goal>
+			<goal>deploy</goal>
+		</goals>
+		<activatedProfiles>
+			<activatedProfile>sonatype-oss-release</activatedProfile>
+		</activatedProfiles>
+	</action>
 </actions>

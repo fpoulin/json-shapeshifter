@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 
 /**
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  */
 public class StringNodeBinding extends AbstractNodeBinding<String> {
 

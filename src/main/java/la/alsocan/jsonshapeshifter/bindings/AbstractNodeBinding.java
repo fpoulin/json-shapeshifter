@@ -7,7 +7,7 @@ import java.util.Set;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 
 /**
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  * @param <T> Type of value for the node binding
  */
 public abstract class AbstractNodeBinding<T> extends Binding<T> {

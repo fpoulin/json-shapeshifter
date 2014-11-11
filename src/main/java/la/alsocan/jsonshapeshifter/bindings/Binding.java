@@ -7,7 +7,7 @@ import java.util.Set;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 
 /**
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  * @param <T> Type of target value for the binding
  */
 public abstract class Binding<T> {

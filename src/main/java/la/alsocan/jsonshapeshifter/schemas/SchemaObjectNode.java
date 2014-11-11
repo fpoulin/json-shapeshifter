@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  */
 public class SchemaObjectNode extends SchemaNode {
 

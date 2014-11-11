@@ -15,7 +15,7 @@ import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 /**
  * Test application to play with the transformations.
  * 
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  */
 public class Main {
 	

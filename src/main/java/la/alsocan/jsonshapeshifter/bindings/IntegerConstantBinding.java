@@ -1,7 +1,7 @@
 package la.alsocan.jsonshapeshifter.bindings;
 
 /**
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  */
 public class IntegerConstantBinding extends AbstractConstantBinding<Integer> {
 
