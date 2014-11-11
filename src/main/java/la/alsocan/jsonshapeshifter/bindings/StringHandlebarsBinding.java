@@ -13,7 +13,7 @@ import la.alsocan.jsonshapeshifter.Default;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 
 /**
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  */
 public class StringHandlebarsBinding extends Binding<String> {
 

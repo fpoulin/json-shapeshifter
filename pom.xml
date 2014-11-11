@@ -13,7 +13,29 @@
 	<version>0.1.0</version>
 	<packaging>jar</packaging>
 
-	<name>Json Shapeshifter (POC)</name>
+	<name>Json Shapeshifter</name>
+	<description>An incremental Json-to-Json transformation library written in Java</description>
+	
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
+	
+	<developers>
+		<developer>
+			<name>Florian Poulin</name>
+			<email>florian.poulin@gmail.com</email>
+			<organizationUrl>https://github.com/fpoulin</organizationUrl>
+		</developer>
+	</developers>
+	
+	<scm>
+		<connection>scm:git:git@github.com:fpoulin/json-shapeshifter.git</connection>
+		<developerConnection>scm:git:git@github.com:fpoulin/json-shapeshifter.git</developerConnection>
+		<url>git@github.com:fpoulin/json-shapeshifter.git</url>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

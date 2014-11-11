@@ -6,7 +6,7 @@ import java.util.Iterator;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 
 /**
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  */
 public class ArrayNodeBinding extends AbstractNodeBinding<Iterator<JsonNode>> {
 

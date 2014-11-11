@@ -3,7 +3,7 @@ package la.alsocan.jsonshapeshifter.schemas;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  */
 public class SchemaArrayNode extends SchemaNode {
 

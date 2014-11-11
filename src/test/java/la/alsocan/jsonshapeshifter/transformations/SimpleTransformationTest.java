@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 
 /**
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  */
 public class SimpleTransformationTest {
 	

@@ -27,7 +27,7 @@ import la.alsocan.jsonshapeshifter.bindings.StringHandlebarsBinding;
 import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
 
 /**
- * @author Florian Poulin <https://github.com/fpoulin>
+ * @author Florian Poulin - https://github.com/fpoulin
  */
 public class Transformation {
 	
@@ -52,8 +52,8 @@ public class Transformation {
 	 * Iterates through the target schema to look for {@link SchemaNode} still requiring a 
 	 * binding. This iterates through the nodes of the target schema but skips those which 
 	 * already have a binding defined as well as <i>object</i> and <i>null</i> nodes (which
-	 * do not require any binding).<br/>
-	 * <br/>
+	 * do not require any binding).<br>
+	 * <br>
 	 * When {@link Iterator#hasNext()} returns <code>false</code>, the transformation can 
 	 * be considered fully defined (and invoking {@link #apply(JsonNode)} is safe).
 	 * 
@@ -120,8 +120,8 @@ public class Transformation {
 	 * Returns a set of {@link SchemaNode} which can be used as source for the given target
 	 * node. This method inspects the current state of the transformation (i.e. the set of 
 	 * bindings already defined) and tells you which nodes from the source schema can be 
-	 * used in a node binding for the given target node.<br/>
-	 * <br/>
+	 * used in a node binding for the given target node.<br>
+	 * <br>
 	 * Use this method before invoking {@link #bind(SchemaNode, Binding)} with a node 
 	 * binding (refer to the <i>see</i> section below for the list of node bindings).
 	 * 
