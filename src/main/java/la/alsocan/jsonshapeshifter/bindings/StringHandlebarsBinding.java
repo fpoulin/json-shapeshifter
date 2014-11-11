@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import la.alsocan.jsonshapeshifter.Default;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 
 /**
@@ -47,7 +48,7 @@ public class StringHandlebarsBinding extends Binding<String> {
 		try {
 			result = template.apply(values);
 		} catch (IOException e) {
-			result = "?";
+			result = Default.DEFAULT_STRING;
 		}
 		return result;
 	}

@@ -2,23 +2,23 @@
 	"$schema": "http://json-schema.org/draft-04/schema#",
 	"type": "object",
 	"properties": {
-		"rootString" : {
+		"rootSourceString" : {
 			"type": "string"
 		},
-		"rootArray": {
+		"rootSourceArray": {
 			"type": "array",
 			"items": {
 				"type": "array",
 				"items": {
 					"type": "object",
 					"properties": {
-						"someString" : {
+						"someSourceString" : {
 							"type": "string"
 						},
-						"anotherString" : {
+						"anotherSourceString" : {
 							"type": "string"
 						},
-						"someArray" : {
+						"someSourceArray" : {
 							"type": "array",
 							"items": {
 								"type": "string"
@@ -26,11 +26,11 @@
 						}
 					},
 					"additionalProperties" : false,
-					"required": ["someString", "anotherString", "someArray"]
+					"required": ["someSourceString", "anotherSourceString", "someSourceArray"]
 				}
 			}
 		}
 	},
 	"additionalProperties" : false,
-	"required": ["rootArray"]
+	"required": ["rootSourceArray"]
 }

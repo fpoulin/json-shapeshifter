@@ -1,20 +1,20 @@
 {
-	"rootString" : "rootString",
-	"rootArray": [
+	"rootSourceString" : "rootSourceString",
+	"rootSourceArray": [
 		[{
-			"someString": "value1",
-			"anotherString": "value2",
-			"someArray": ["a", "b", "c", "d"]
+			"someSourceString": "value1",
+			"anotherSourceString": "value2",
+			"someSourceArray": ["a", "b", "c", "d"]
 		}],
 		[{
-			"someString": "value3",
-			"anotherString": "value4",
-			"someArray": ["e", "f"]
+			"someSourceString": "value3",
+			"anotherSourceString": "value4",
+			"someSourceArray": ["e", "f"]
 		}],
 		[{
-			"someString": "value5",
-			"anotherString": "value6",
-			"someArray": ["g"]
+			"someSourceString": "value5",
+			"anotherSourceString": "value6",
+			"someSourceArray": ["g"]
 		}]
 	]
 }

@@ -8,6 +8,8 @@ import la.alsocan.jsonshapeshifter.schemas.Schema;
 import java.io.IOException;
 import java.util.Iterator;
 import la.alsocan.jsonshapeshifter.bindings.ArrayNodeBinding;
+import la.alsocan.jsonshapeshifter.bindings.StringConstantBinding;
+import la.alsocan.jsonshapeshifter.bindings.StringNodeBinding;
 import la.alsocan.jsonshapeshifter.schemas.SchemaNode;
 
 /**
@@ -41,32 +43,24 @@ public class Main {
 		// build the transformation incrementally
 		Transformation t = new Transformation(source, target);
 		Iterator<SchemaNode> it = t.toBind();
-		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootArray")));
-		showPossibilities(t, target.at("/rootArray/{i}/{i}/someArray/{i}"));
-		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}")));
-		showPossibilities(t, target.at("/rootArray/{i}/{i}/someArray/{i}"));
-		it.next();
-		it.next();
-		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootArray/{i}/{i}/someArray")));
-		showPossibilities(t, target.at("/rootArray/{i}/{i}/someArray/{i}"));
+		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootSourceArray")));
+		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootSourceArray/{i}")));
+		t.bind(it.next(), new StringConstantBinding("Constant value"));
+		t.bind(it.next(), new StringNodeBinding(source.at("/rootSourceString")));
+		t.bind(it.next(), new ArrayNodeBinding(source.at("/rootSourceArray/{i}/{i}/someSourceArray")));
+		t.bind(it.next(), new StringNodeBinding(source.at("/rootSourceArray/{i}/{i}/someSourceArray/{i}")));
 		
 		// produce something
-		System.out.println("\nResulting payload:");
 		JsonNode payload = new ObjectMapper().readTree(new File(SOURCE_PAYLOAD));
 		JsonNode result = t.apply(payload);
 		ObjectMapper om = new ObjectMapper();
 		try {
+			System.out.println("Original payload:");
+			System.out.println(om.writerWithDefaultPrettyPrinter().writeValueAsString(payload));
+			System.out.println("\nResulting payload:");
 			System.out.println(om.writerWithDefaultPrettyPrinter().writeValueAsString(result));
 		} catch (JsonProcessingException ex) {
 			System.err.println("Oups: " + ex);
 		}
 	}
-	
-	public static void showPossibilities(Transformation t, SchemaNode target) {
-		
-		t.legalNodesFor(target).stream().forEach((source) -> {
-			System.out.println("   " + source.getSchemaPointer());
-		});
-		System.out.println();
-	} 
 }

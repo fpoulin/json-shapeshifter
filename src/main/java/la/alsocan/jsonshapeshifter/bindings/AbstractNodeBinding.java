@@ -16,6 +16,9 @@ public abstract class AbstractNodeBinding<T> extends Binding<T> {
 	
 	public AbstractNodeBinding(SchemaNode source) {
 		this.source = source;
+		if (source == null) {
+			throw new IllegalBindingException();
+		}
 	}
 	
 	@Override
