@@ -54,7 +54,15 @@ System.out.println(s);
 
 ### Get it from Maven Central
 
-_(coming soon)_
+That's the easiest. Current version is `0.1.0` (it's a beta but it does things)
+
+```xml
+<dependency>
+   <groupId>la.alsocan</groupId>
+   <artifactId>json-shapeshifter</artifactId>
+   <version>0.1.0</version>
+</dependency>
+```
 
 ### Build from the source
 
