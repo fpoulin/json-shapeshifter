@@ -55,8 +55,9 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 	 * @param schemaPath Path to a valid Json schema file
 	 * @return A {@link Schema} instance
 	 * @throws IOException the schema file cannot be read
+	 * @throws UnsupportedJsonSchemaException the schema uses unsupported features
 	 */
-	public final static Schema buildSchema(String schemaPath) throws IOException {
+	public final static Schema buildSchema(String schemaPath) throws IOException, UnsupportedJsonSchemaException {
 		return Schema.buildSchema(new File(schemaPath));
 	}
 	
@@ -65,6 +66,7 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 	 * @param schemaFile A valid Json schema file
 	 * @return A {@link Schema} instance
 	 * @throws IOException the schema file cannot be read
+	 * @throws UnsupportedJsonSchemaException the schema uses unsupported features
 	 */
 	public final static Schema buildSchema(File schemaFile) throws IOException {
 		return Schema.buildSchema(new ObjectMapper().readTree(schemaFile));
@@ -74,8 +76,9 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 	 * Build a {@link Schema} instance.
 	 * @param schemaNode A {@link JsonNode} corresponding to a valid Json schema
 	 * @return A {@link Schema} instance
+	 * @throws UnsupportedJsonSchemaException the schema uses unsupported features
 	 */
-	public final static Schema buildSchema(JsonNode schemaNode) {
+	public final static Schema buildSchema(JsonNode schemaNode) throws UnsupportedJsonSchemaException {
 		Schema schema = new Schema(schemaNode, "", "", true);
 		schema.withResolvedChildren(schemaNode);
 		schema.buildIndex();
