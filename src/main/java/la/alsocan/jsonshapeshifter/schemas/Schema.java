@@ -122,6 +122,14 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 	public final SchemaNode at(String schemaPointer) {
 		return nodeIndex.get(schemaPointer);
 	}
+
+	/**
+	 * Get the underlying {@link JsonNode} corresponding to this schema.
+	 * @return A 
+	 */
+	public JsonNode getSchemaNode() {
+		return schemaNode;
+	}
 	
 	// FIXME: replace this with something more elegant
 	private final TreeMap<String, SchemaNode> nodeIndex = new TreeMap<>();

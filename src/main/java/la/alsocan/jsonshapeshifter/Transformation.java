@@ -70,6 +70,30 @@ public class Transformation {
 		this.target = target;
 		bindings = new TreeMap<>();
 	}
+
+	/**
+	 * Get the {@link Binding}s defined in this transformation.
+	 * @return All bindings defined in this transformation
+	 */
+	public Map<SchemaNode, Binding<?>> getBindings() {
+		return bindings;
+	}
+
+	/**
+	 * Get the source {@link Schema} used in this transformation.
+	 * @return The source schema used in this transformation
+	 */
+	public Schema getSource() {
+		return source;
+	}
+
+	/**
+	 * Get the target {@link Schema} used in this transformation.
+	 * @return The target schema used in this transformation
+	 */
+	public Schema getTarget() {
+		return target;
+	}
 	
 	/**
 	 * Iterates through the target schema to look for {@link SchemaNode} still requiring a 
