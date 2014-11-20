@@ -120,7 +120,7 @@ public class Schema extends SchemaObjectNode implements Iterable<SchemaNode> {
 	 * <code>null</code> if the node cannot be found
 	 */
 	public final SchemaNode at(String schemaPointer) {
-		return nodeIndex.get(schemaPointer);
+		return schemaPointer != null? nodeIndex.get(schemaPointer) : null;
 	}
 
 	/**
