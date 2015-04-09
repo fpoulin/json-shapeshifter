@@ -60,7 +60,7 @@ That's the easiest. Current version is `0.1.0` (it's a beta but it does things)
 <dependency>
    <groupId>la.alsocan</groupId>
    <artifactId>json-shapeshifter</artifactId>
-   <version>0.1.0</version>
+   <version>0.1.1</version>
 </dependency>
 ```
 
