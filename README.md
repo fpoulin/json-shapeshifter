@@ -1,4 +1,4 @@
-# json-shapeshifter
+# json-shapeshifter [![Build Status](https://travis-ci.org/fpoulin/json-shapeshifter.svg?branch=master)](https://travis-ci.org/fpoulin/json-shapeshifter)
 
 An incremental Json-to-Json transformation library written in Java.
 
