@@ -54,7 +54,7 @@ System.out.println(s);
 
 ### Get it from Maven Central
 
-That's the easiest. Current version is `0.1.0` (it's a beta but it does things)
+That's the easiest. Current version is `0.1.1` (it's a beta but it does things)
 
 ```xml
 <dependency>
