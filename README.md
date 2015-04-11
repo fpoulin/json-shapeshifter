@@ -1,4 +1,6 @@
-# json-shapeshifter [![Build Status](https://travis-ci.org/fpoulin/json-shapeshifter.svg?branch=master)](https://travis-ci.org/fpoulin/json-shapeshifter)
+# json-shapeshifter 
+[![Build Status](https://travis-ci.org/fpoulin/json-shapeshifter.svg?branch=master)](https://travis-ci.org/fpoulin/json-shapeshifter)
+[![Coverage Status](https://coveralls.io/repos/fpoulin/json-shapeshifter/badge.svg?branch=master)](https://coveralls.io/r/fpoulin/json-shapeshifter?branch=master)
 
 An incremental Json-to-Json transformation library written in Java.
 
